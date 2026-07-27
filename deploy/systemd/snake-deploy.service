@@ -1,0 +1,11 @@
+[Unit]
+Description=Deploy Snake origin/main static files to /var/www/snake
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/snake/repo
+EnvironmentFile=-/etc/snake/webhook.env
+ExecStart=/opt/snake/deploy/auto-deploy.sh
+TimeoutStartSec=120

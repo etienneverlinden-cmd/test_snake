@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch for a Snake deploy request from the webhook
+
+[Path]
+PathExists=/run/snake-deploy/request
+Unit=snake-deploy.service
+
+[Install]
+WantedBy=multi-user.target
