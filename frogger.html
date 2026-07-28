@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Frogger — Stijn Arcade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="frogger.css">
+</head>
+<body>
+  <div class="background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <main class="container">
+    <a class="back-home" href="index.html">← All games</a>
+
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🐸</span>
+        <h1>Frogger</h1>
+      </div>
+      <p class="tagline">Get Stijn home — dodge cars, ride logs</p>
+    </header>
+
+    <div class="scoreboard">
+      <div class="score-card">
+        <span class="score-label">Score</span>
+        <span class="score-value" id="score">0</span>
+      </div>
+      <div class="score-card">
+        <span class="score-label">Lives</span>
+        <span class="score-value" id="lives">3</span>
+      </div>
+      <div class="score-card score-card--best">
+        <span class="score-label">Best</span>
+        <span class="score-value" id="highScore">0</span>
+      </div>
+      <div class="score-card">
+        <span class="score-label">Time</span>
+        <span class="score-value" id="timeLeft">40</span>
+      </div>
+    </div>
+
+    <div class="canvas-container">
+      <canvas id="gameCanvas" width="480" height="560"></canvas>
+
+      <div class="overlay" id="startOverlay">
+        <div class="overlay-content">
+          <img class="overlay-face" src="assets/snake-head.png" alt="">
+          <h2>Cross to safety</h2>
+          <p>Hop across traffic and the river. Fill all five lily pads. Don't get squashed or soaked.</p>
+          <button class="btn btn-primary" id="startBtn">Start Game</button>
+        </div>
+      </div>
+
+      <div class="overlay overlay--hidden" id="pauseOverlay">
+        <div class="overlay-content">
+          <h2>Paused</h2>
+          <p>Press <kbd>Space</kbd> or Resume</p>
+          <button class="btn btn-primary" id="resumeBtn">Resume</button>
+        </div>
+      </div>
+
+      <div class="overlay overlay--hidden" id="gameOverOverlay">
+        <div class="overlay-content">
+          <h2 id="endTitle">Game Over</h2>
+          <p class="final-score">Score: <span id="finalScore">0</span></p>
+          <p class="new-record overlay--hidden" id="newRecord">🎉 New high score!</p>
+          <button class="btn btn-primary" id="restartBtn">Play Again</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="control-hints">
+        <div class="hint">
+          <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd>
+          <span>Hop</span>
+        </div>
+        <div class="hint">
+          <kbd>Space</kbd>
+          <span>Pause</span>
+        </div>
+      </div>
+      <div class="mobile-controls" id="mobileControls">
+        <button class="d-pad-btn d-pad-up" data-dir="up" aria-label="Up">▲</button>
+        <button class="d-pad-btn d-pad-left" data-dir="left" aria-label="Left">◀</button>
+        <button class="d-pad-btn d-pad-down" data-dir="down" aria-label="Down">▼</button>
+        <button class="d-pad-btn d-pad-right" data-dir="right" aria-label="Right">▶</button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Stijn hops. Cars don't. Choose wisely.</p>
+    </footer>
+  </main>
+
+  <script src="frogger.js"></script>
+</body>
+</html>

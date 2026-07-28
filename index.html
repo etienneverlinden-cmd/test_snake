@@ -2,158 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Serpent — Snake Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stijn Arcade</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="home.css">
 </head>
 <body>
-  <div class="background">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--left"></div>
+    <div class="bg-glow bg-glow--right"></div>
   </div>
 
-  <main class="container">
-    <header class="header">
-      <div class="logo">
-        <span class="logo-icon">🐍</span>
-        <h1>Serpent</h1>
-      </div>
-      <p class="tagline">Classic snake, reimagined</p>
-    </header>
-
-    <div class="main-layout">
-      <div class="game-wrapper">
-        <div class="scoreboard">
-          <div class="score-card">
-            <span class="score-label">Score</span>
-            <span class="score-value" id="score">0</span>
-          </div>
-          <div class="score-card score-card--best">
-            <span class="score-label">Best</span>
-            <span class="score-value" id="highScore">0</span>
-          </div>
-        </div>
-
-        <div class="speed-control">
-          <label class="speed-label" for="speedSlider">Snake speed</label>
-          <input type="range" id="speedSlider" class="speed-slider" min="1" max="5" value="3" step="1">
-          <div class="speed-labels">
-            <span>Slow</span>
-            <span id="speedValue">Normal</span>
-            <span>Fast</span>
-          </div>
-        </div>
-
-        <div class="canvas-container">
-          <canvas id="gameCanvas" width="400" height="400"></canvas>
-
-          <div class="overlay" id="startOverlay">
-            <div class="overlay-content">
-              <h2>Ready to play?</h2>
-              <p>Use arrow keys or swipe to move. Eat the fruit, grow longer, and don't hit the walls or yourself.</p>
-              <button class="btn btn-primary" id="startBtn">Start Game</button>
-            </div>
-          </div>
-
-          <div class="overlay overlay--hidden" id="pauseOverlay">
-            <div class="overlay-content">
-              <h2>Paused</h2>
-              <p>Press <kbd>Space</kbd> or tap Resume to continue</p>
-              <button class="btn btn-primary" id="resumeBtn">Resume</button>
-            </div>
-          </div>
-
-          <div class="overlay overlay--hidden" id="gameOverOverlay">
-            <div class="overlay-content">
-              <h2>Game Over</h2>
-              <p class="final-score">Score: <span id="finalScore">0</span></p>
-              <p class="new-record overlay--hidden" id="newRecord">🎉 New high score!</p>
-              <button class="btn btn-primary" id="restartBtn">Play Again</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="controls">
-          <div class="control-hints">
-            <div class="hint">
-              <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd>
-              <span>Move</span>
-            </div>
-            <div class="hint">
-              <kbd>Space</kbd>
-              <span>Pause</span>
-            </div>
-          </div>
-
-          <div class="mobile-controls" id="mobileControls">
-            <button class="d-pad-btn d-pad-up" data-dir="up" aria-label="Up">▲</button>
-            <button class="d-pad-btn d-pad-left" data-dir="left" aria-label="Left">◀</button>
-            <button class="d-pad-btn d-pad-down" data-dir="down" aria-label="Down">▼</button>
-            <button class="d-pad-btn d-pad-right" data-dir="right" aria-label="Right">▶</button>
-          </div>
-        </div>
+  <main class="home">
+    <section class="hero">
+      <div class="hero-portrait-wrap">
+        <img class="hero-portrait" src="assets/snake-head.png" alt="Stijn">
+        <div class="hero-ring" aria-hidden="true"></div>
+        <span class="hero-badge">PLAYER ONE</span>
       </div>
 
-      <aside class="mascot-panel" aria-label="Funny snake mascot">
-        <div class="mascot-card">
-          <p class="mascot-eyebrow">Say hello to</p>
-          <h2 class="mascot-title">Sir Hiss-a-Lot</h2>
+      <div class="hero-copy">
+        <p class="hero-kicker">Pragmatict presents</p>
+        <h1 class="hero-title">Stijn<br>Arcade</h1>
+        <p class="hero-lede">Two classic games. One legendary face. Pick your challenge.</p>
+      </div>
+    </section>
 
-          <div class="funny-snake">
-            <div class="speech-bubble">
-              <p id="mascotQuote">Ssssssup? Ready to slither?</p>
-            </div>
+    <section class="picker" aria-label="Choose a game">
+      <a class="game-pick game-pick--snake" href="snake.html">
+        <span class="game-pick-icon" aria-hidden="true">🐍</span>
+        <span class="game-pick-body">
+          <span class="game-pick-name">Snake</span>
+          <span class="game-pick-desc">Eat, grow, don't crash. Serpent awaits.</span>
+        </span>
+        <span class="game-pick-cta">Play →</span>
+      </a>
 
-            <div class="snake-head-mascot">
-              <img src="assets/snake-head.png" alt="Funny snake head" class="snake-head-img">
-              <div class="snake-tongue" aria-hidden="true"></div>
-              <div class="party-hat" aria-hidden="true">🎩</div>
-            </div>
+      <a class="game-pick game-pick--frog" href="frogger.html">
+        <span class="game-pick-icon" aria-hidden="true">🐸</span>
+        <span class="game-pick-body">
+          <span class="game-pick-name">Frogger</span>
+          <span class="game-pick-desc">Cross roads and rivers. Stijn hops home.</span>
+        </span>
+        <span class="game-pick-cta">Play →</span>
+      </a>
+    </section>
 
-            <svg class="snake-body-svg" viewBox="0 0 220 280" aria-hidden="true">
-              <defs>
-                <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#00e5a0"/>
-                  <stop offset="100%" stop-color="#00c48c"/>
-                </linearGradient>
-              </defs>
-              <path class="snake-path" d="M110,72 C60,90 40,130 80,155 C130,185 170,200 130,230 C80,260 50,250 90,268" />
-            </svg>
-
-            <div class="snake-segments" aria-hidden="true">
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-              <span class="segment"></span>
-            </div>
-
-            <div class="tiny-legs" aria-hidden="true">
-              <span class="leg leg-left">🦶</span>
-              <span class="leg leg-right">🦶</span>
-            </div>
-          </div>
-
-          <p class="mascot-caption">Your #1 hype snake</p>
-        </div>
-      </aside>
-    </div>
-
-    <footer class="footer">
-      <p>Built with ❤️ — eat fruit, grow long, stay alive</p>
+    <footer class="home-footer">
+      <p>Stijn's head. Your high scores. No frogs were harmed.</p>
     </footer>
   </main>
-
-  <script src="game.js"></script>
-  <script src="mascot.js"></script>
 </body>
 </html>
