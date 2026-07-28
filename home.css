@@ -278,6 +278,66 @@ body {
   animation: riseIn 0.7s ease 0.22s both;
 }
 
+.db-status {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.leaderboards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  animation: riseIn 0.7s ease 0.18s both;
+}
+
+.board {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem 1rem;
+  backdrop-filter: blur(14px);
+}
+
+.board-title {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.board-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.board-list li {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.board-list .rank {
+  color: var(--mint);
+  font-weight: 700;
+}
+
+.board-list .pts {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.board-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  display: block !important;
+}
+
 @media (max-width: 720px) {
   .hero {
     grid-template-columns: 1fr;
@@ -288,7 +348,8 @@ body {
     margin-inline: auto;
   }
 
-  .picker {
+  .picker,
+  .leaderboards {
     grid-template-columns: 1fr;
   }
 

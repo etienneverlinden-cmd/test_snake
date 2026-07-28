@@ -36,7 +36,15 @@ mkdir -p "$WEB_DIR/assets"
 rsync -a --delete \
 	--exclude '.git/' \
 	--exclude 'deploy/' \
+	--exclude 'node_modules/' \
+	--exclude 'convex/' \
+	--exclude '.convex/' \
+	--exclude 'package.json' \
+	--exclude 'package-lock.json' \
 	--exclude '.gitignore' \
+	--exclude '.env' \
+	--exclude '.env.example' \
+	--exclude 'CONVEX.md' \
 	--exclude 'README.md' \
 	"$REPO_DIR/" "$WEB_DIR/"
 

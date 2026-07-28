@@ -56,11 +56,25 @@
   };
 
   function loadHighScore() {
+    if (window.ArcadeDB) return window.ArcadeDB.localBest('snake');
     return parseInt(localStorage.getItem('serpent-highscore') || '0', 10);
   }
 
   function saveHighScore(value) {
+    if (window.ArcadeDB) {
+      // local cache is updated inside submitScore / getBestScore
+      return;
+    }
     localStorage.setItem('serpent-highscore', String(value));
+  }
+
+  async function refreshHighScore() {
+    if (window.ArcadeDB) {
+      highScore = await window.ArcadeDB.getBestScore('snake');
+    } else {
+      highScore = loadHighScore();
+    }
+    highScoreEl.textContent = highScore;
   }
 
   function getSelectedSpeed() {
@@ -86,6 +100,14 @@
     showOverlay(startOverlay);
     hideOverlay(pauseOverlay);
     hideOverlay(gameOverOverlay);
+    refreshHighScore();
+    const nameInput = document.getElementById('playerName');
+    const startName = document.getElementById('playerNameStart');
+    if (window.ArcadeDB) {
+      const saved = window.ArcadeDB.getPlayerName();
+      if (nameInput) nameInput.value = saved;
+      if (startName) startName.value = saved;
+    }
   }
 
   function resetGame() {
@@ -123,6 +145,10 @@
   }
 
   function startGame() {
+    const startName = document.getElementById('playerNameStart');
+    if (window.ArcadeDB && startName) {
+      window.ArcadeDB.setPlayerName(startName.value || 'Anonymous');
+    }
     resetGame();
     state = 'playing';
     setSpeedControlEnabled(false);
@@ -154,18 +180,49 @@
     setSpeedControlEnabled(true);
     finalScoreEl.textContent = score;
 
-    const isNewRecord = score > highScore;
-    if (isNewRecord) {
-      highScore = score;
-      saveHighScore(highScore);
-      highScoreEl.textContent = highScore;
-      newRecordEl.classList.remove('overlay--hidden');
-    } else {
-      newRecordEl.classList.add('overlay--hidden');
-    }
+    const nameInput = document.getElementById('playerName');
+    const startName = document.getElementById('playerNameStart');
+    const playerName =
+      nameInput?.value ||
+      startName?.value ||
+      (window.ArcadeDB && window.ArcadeDB.getPlayerName()) ||
+      'Anonymous';
 
-    showOverlay(gameOverOverlay);
-    window.dispatchEvent(new CustomEvent('serpent:gameOver', { detail: { score } }));
+    const finish = (best) => {
+      const isNewRecord = score > 0 && score >= best && score >= highScore;
+      if (score > highScore) {
+        highScore = score;
+        highScoreEl.textContent = highScore;
+      }
+      if (isNewRecord || score > best) {
+        newRecordEl.classList.remove('overlay--hidden');
+      } else {
+        newRecordEl.classList.add('overlay--hidden');
+      }
+      showOverlay(gameOverOverlay);
+      window.dispatchEvent(new CustomEvent('serpent:gameOver', { detail: { score } }));
+    };
+
+    if (window.ArcadeDB) {
+      window.ArcadeDB.submitScore('snake', score, playerName).then(async () => {
+        const best = await window.ArcadeDB.getBestScore('snake');
+        highScore = best;
+        highScoreEl.textContent = highScore;
+        finish(best);
+      });
+    } else {
+      const isNewRecord = score > highScore;
+      if (isNewRecord) {
+        highScore = score;
+        saveHighScore(highScore);
+        highScoreEl.textContent = highScore;
+        newRecordEl.classList.remove('overlay--hidden');
+      } else {
+        newRecordEl.classList.add('overlay--hidden');
+      }
+      showOverlay(gameOverOverlay);
+      window.dispatchEvent(new CustomEvent('serpent:gameOver', { detail: { score } }));
+    }
   }
 
   function tick() {

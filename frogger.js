@@ -53,11 +53,22 @@
   const ROAD_ROWS = [7, 8, 9, 10];
 
   function loadHigh() {
+    if (window.ArcadeDB) return window.ArcadeDB.localBest('frogger');
     return parseInt(localStorage.getItem('frogger-highscore') || '0', 10);
   }
 
   function saveHigh(v) {
+    if (window.ArcadeDB) return;
     localStorage.setItem('frogger-highscore', String(v));
+  }
+
+  async function refreshHighScore() {
+    if (window.ArcadeDB) {
+      highScore = await window.ArcadeDB.getBestScore('frogger');
+    } else {
+      highScore = loadHigh();
+    }
+    highScoreEl.textContent = highScore;
   }
 
   function show(el) { el.classList.remove('overlay--hidden'); }
@@ -131,6 +142,10 @@
   }
 
   function startGame() {
+    const startName = document.getElementById('playerNameStart');
+    if (window.ArcadeDB && startName) {
+      window.ArcadeDB.setPlayerName(startName.value || 'Anonymous');
+    }
     score = 0;
     lives = START_LIVES;
     homes = [false, false, false, false, false];
@@ -163,15 +178,46 @@
     state = 'gameover';
     endTitle.textContent = won ? 'You made it!' : 'Game Over';
     finalScoreEl.textContent = score;
-    if (score > highScore) {
-      highScore = score;
-      saveHigh(highScore);
-      highScoreEl.textContent = highScore;
-      newRecordEl.classList.remove('overlay--hidden');
+
+    const nameInput = document.getElementById('playerName');
+    const startName = document.getElementById('playerNameStart');
+    const playerName =
+      nameInput?.value ||
+      startName?.value ||
+      (window.ArcadeDB && window.ArcadeDB.getPlayerName()) ||
+      'Anonymous';
+
+    const applyResult = (best) => {
+      if (score > highScore) {
+        highScore = score;
+        highScoreEl.textContent = highScore;
+      }
+      if (score > 0 && score >= best) {
+        newRecordEl.classList.remove('overlay--hidden');
+      } else {
+        newRecordEl.classList.add('overlay--hidden');
+      }
+      show(gameOverOverlay);
+    };
+
+    if (window.ArcadeDB) {
+      window.ArcadeDB.submitScore('frogger', score, playerName).then(async () => {
+        const best = await window.ArcadeDB.getBestScore('frogger');
+        highScore = best;
+        highScoreEl.textContent = highScore;
+        applyResult(best);
+      });
     } else {
-      newRecordEl.classList.add('overlay--hidden');
+      if (score > highScore) {
+        highScore = score;
+        saveHigh(highScore);
+        highScoreEl.textContent = highScore;
+        newRecordEl.classList.remove('overlay--hidden');
+      } else {
+        newRecordEl.classList.add('overlay--hidden');
+      }
+      show(gameOverOverlay);
     }
-    show(gameOverOverlay);
   }
 
   function loseLife() {
@@ -512,6 +558,14 @@
   show(startOverlay);
   hide(pauseOverlay);
   hide(gameOverOverlay);
+  refreshHighScore();
+  const nameInput = document.getElementById('playerName');
+  const startName = document.getElementById('playerNameStart');
+  if (window.ArcadeDB) {
+    const saved = window.ArcadeDB.getPlayerName();
+    if (nameInput) nameInput.value = saved;
+    if (startName) startName.value = saved;
+  }
 
   function idleAnim() {
     if (state === 'idle') {

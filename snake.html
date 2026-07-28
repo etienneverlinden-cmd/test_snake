@@ -56,6 +56,8 @@
             <div class="overlay-content">
               <h2>Ready to play?</h2>
               <p>Use arrow keys or swipe to move. Eat the fruit, grow longer, and don't hit the walls or yourself.</p>
+              <label class="player-name-label" for="playerNameStart">Your name</label>
+              <input class="player-name-input" id="playerNameStart" type="text" maxlength="24" placeholder="Anonymous" autocomplete="nickname">
               <button class="btn btn-primary" id="startBtn">Start Game</button>
             </div>
           </div>
@@ -70,10 +72,12 @@
 
           <div class="overlay overlay--hidden" id="gameOverOverlay">
             <div class="overlay-content">
-              <h2>Game Over</h2>
-              <p class="final-score">Score: <span id="finalScore">0</span></p>
-              <p class="new-record overlay--hidden" id="newRecord">🎉 New high score!</p>
-              <button class="btn btn-primary" id="restartBtn">Play Again</button>
+            <h2>Game Over</h2>
+            <p class="final-score">Score: <span id="finalScore">0</span></p>
+            <p class="new-record overlay--hidden" id="newRecord">🎉 New high score!</p>
+            <label class="player-name-label" for="playerName">Your name</label>
+            <input class="player-name-input" id="playerName" type="text" maxlength="24" placeholder="Anonymous" autocomplete="nickname">
+            <button class="btn btn-primary" id="restartBtn">Play Again</button>
             </div>
           </div>
         </div>
@@ -154,6 +158,8 @@
     </footer>
   </main>
 
+  <script src="js/convex-config.js"></script>
+  <script src="js/db.js"></script>
   <script src="game.js"></script>
   <script src="mascot.js"></script>
 </body>

@@ -51,9 +51,29 @@
       </a>
     </section>
 
+    <section class="leaderboards" aria-label="Leaderboards">
+      <div class="board">
+        <h2 class="board-title">Snake top scores</h2>
+        <ol class="board-list" id="snakeBoard">
+          <li class="board-empty">Loading…</li>
+        </ol>
+      </div>
+      <div class="board">
+        <h2 class="board-title">Frogger top scores</h2>
+        <ol class="board-list" id="froggerBoard">
+          <li class="board-empty">Loading…</li>
+        </ol>
+      </div>
+    </section>
+
     <footer class="home-footer">
       <p>Stijn's head. Your high scores. No frogs were harmed.</p>
+      <p class="db-status" id="dbStatus"></p>
     </footer>
   </main>
+
+  <script src="js/convex-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>

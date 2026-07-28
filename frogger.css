@@ -238,6 +238,35 @@ body {
   margin-top: -0.75rem !important;
 }
 
+.player-name-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.player-name-input {
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto 1.15rem;
+  display: block;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+}
+
+.player-name-input:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
 .btn {
   font-family: var(--font);
   font-size: 1rem;
