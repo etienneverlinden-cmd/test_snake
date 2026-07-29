@@ -1,11 +1,5 @@
 /**
- * Browser Convex client — same idea as pawnie's lib/convex-server.ts:
- * - talk to Convex when configured
- * - return null / fall back to localStorage when not
- *
- * Static arcade: the browser calls Convex directly (public queries/mutations).
- * Pawnie keeps a server secret because Next.js can hide it; we can't put
- * CONVEX_API_SECRET in the browser, so score functions are public + validated.
+ * Browser Convex client — auth-aware (Bearer token via ArcadeAuth).
  */
 (function (global) {
   'use strict';
@@ -24,35 +18,14 @@
     return !!convexUrl();
   }
 
-  async function convexFetch(kind, path, args) {
-    if (!convexEnabled()) return null;
-    try {
-      const res = await fetch(`${convexUrl()}/api/${kind}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, args, format: 'json' }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.status === 'error' || data.errorMessage) {
-        console.error('[convex]', path, data.errorMessage || data);
-        return null;
-      }
-      // Convex HTTP may return { status: "success", value } or bare value
-      if (Object.prototype.hasOwnProperty.call(data, 'value')) return data.value;
-      if (data.status === 'success') return data.value;
-      return data;
-    } catch (err) {
-      console.error('[convex] failed:', path, err.message || err);
-      return null;
-    }
-  }
-
   async function tryConvexQuery(path, args) {
-    return convexFetch('query', path, args);
+    if (!convexEnabled() || !global.ArcadeAuth) return null;
+    return global.ArcadeAuth.callQuery(path, args);
   }
 
   async function tryConvexMutation(path, args) {
-    return convexFetch('mutation', path, args);
+    if (!convexEnabled() || !global.ArcadeAuth) return null;
+    return global.ArcadeAuth.callMutation(path, args);
   }
 
   function localBest(game) {
@@ -78,13 +51,9 @@
     return cleaned;
   }
 
-  /**
-   * Best score for UI: prefer Convex global best, else localStorage.
-   */
   async function getBestScore(game) {
     const remote = await tryConvexQuery('scores:getBestScore', { game });
     if (remote && typeof remote.score === 'number') {
-      // Keep local cache roughly in sync for offline UI
       saveLocalBest(game, remote.score);
       return remote.score;
     }
@@ -103,11 +72,8 @@
       : [];
   }
 
-  /**
-   * Persist a run. Always updates local best; pushes to Convex when enabled.
-   */
   async function submitScore(game, score, playerName) {
-    const name = setPlayerName(playerName || getPlayerName() || 'Anonymous');
+    const name = setPlayerName(playerName || getPlayerName() || 'Player');
     saveLocalBest(game, score);
     const remote = await tryConvexMutation('scores:submitScore', {
       game,
@@ -117,7 +83,7 @@
     return {
       ok: true,
       savedRemote: remote !== null,
-      playerName: name,
+      playerName: remote?.playerName || name,
       score,
       remote,
     };

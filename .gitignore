@@ -7,6 +7,7 @@ node_modules/
 # Editors
 .vscode/
 .idea/
+.cursor/
 *.swp
 *~
 
@@ -15,6 +16,7 @@ node_modules/
 .env
 .env.*
 !.env.example
+.auth-*.tmp
 
 # Convex local
 .convex/

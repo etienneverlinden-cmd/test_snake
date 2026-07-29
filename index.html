@@ -3,77 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stijn Arcade</title>
+  <title>Pragmatict — Project management &amp; AI</title>
+  <meta name="description" content="Pragmatict supports organisations with executive project management and AI-enabled optimisation that deliver measurable bottom-line results.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="home.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <div class="bg" aria-hidden="true">
-    <div class="bg-grid"></div>
-    <div class="bg-glow bg-glow--left"></div>
-    <div class="bg-glow bg-glow--right"></div>
-  </div>
+  <header class="topbar">
+    <a class="logo" href="index.html">
+      <span class="logo-main">Pragmatict</span>
+      <span class="logo-sub">Project management &amp; AI</span>
+    </a>
+    <a class="btn-outline" id="myPragmatictLink" href="login.html?next=arcade.html">My Pragmatict</a>
+  </header>
 
-  <main class="home">
-    <section class="hero">
-      <div class="hero-portrait-wrap">
-        <img class="hero-portrait" src="assets/snake-head.png" alt="Stijn">
-        <div class="hero-ring" aria-hidden="true"></div>
-        <span class="hero-badge">PLAYER ONE</span>
+  <section class="hero">
+    <div class="hero-veil" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <p class="hero-kicker">Executive delivery. Measurable results.</p>
+      <h1 class="hero-script">
+        Lead change<br>with clarity.
+      </h1>
+      <p class="hero-sub">
+        Take your programmes from “on track?” to outcomes you can defend — timing, cost, and quality included.
+      </p>
+    </div>
+    <p class="hero-stamp" aria-hidden="true">PRAGMATICT</p>
+  </section>
+
+  <section class="content">
+    <div class="content-grid">
+      <div class="content-aside">
+        <p class="aside-label">What we do</p>
+        <div class="aside-stack" aria-hidden="true">
+          <img class="aside-card aside-card--a" src="assets/pragmatict-work-1.png?v=2" alt="">
+          <img class="aside-card aside-card--b" src="assets/pragmatict-work-2.png?v=2" alt="">
+        </div>
       </div>
 
-      <div class="hero-copy">
-        <p class="hero-kicker">Pragmatict presents</p>
-        <h1 class="hero-title">Stijn<br>Arcade</h1>
-        <p class="hero-lede">Two classic games. One legendary face. Pick your challenge.</p>
-      </div>
-    </section>
+      <article class="content-main">
+        <h2 class="content-title">Taking complex programmes from ambition to the bottom line.</h2>
 
-    <section class="picker" aria-label="Choose a game">
-      <a class="game-pick game-pick--snake" href="snake.html">
-        <span class="game-pick-icon" aria-hidden="true">🐍</span>
-        <span class="game-pick-body">
-          <span class="game-pick-name">Snake</span>
-          <span class="game-pick-desc">Eat, grow, don't crash. Serpent awaits.</span>
-        </span>
-        <span class="game-pick-cta">Play →</span>
-      </a>
+        <div class="content-body">
+          <p>
+            <strong>Pragmatict</strong> helps businesses navigate change with discipline:
+            programme leadership, operational improvement, and governance that turn strategy into delivery.
+            The focus is practical — market shifts, complex rollouts, and transformation programmes where timing, cost, and quality cannot slip.
+          </p>
+          <p>
+            Engagements are grounded in large-scale execution experience across telecom, fibre, and utility environments:
+            bringing programmes back on track, aligning partners, and embedding the operating model required to sustain results.
+          </p>
+          <p>
+            <strong>Artificial intelligence</strong> is applied where it strengthens project management and cost performance —
+            clearer foresight on risk and progress, faster decision support, and leaner financial and operational control.
+            Used with judgement, AI reduces waste, sharpens priorities, and accelerates the path from insight to measurable savings.
+          </p>
+        </div>
 
-      <a class="game-pick game-pick--frog" href="frogger.html">
-        <span class="game-pick-icon" aria-hidden="true">🐸</span>
-        <span class="game-pick-body">
-          <span class="game-pick-name">Frogger</span>
-          <span class="game-pick-desc">Cross roads and rivers. Stijn hops home.</span>
-        </span>
-        <span class="game-pick-cta">Play →</span>
-      </a>
-    </section>
+        <a class="btn-pill" id="myPragmatictCta" href="login.html?next=arcade.html">Enter My Pragmatict</a>
+      </article>
+    </div>
+  </section>
 
-    <section class="leaderboards" aria-label="Leaderboards">
-      <div class="board">
-        <h2 class="board-title">Snake top scores</h2>
-        <ol class="board-list" id="snakeBoard">
-          <li class="board-empty">Loading…</li>
-        </ol>
-      </div>
-      <div class="board">
-        <h2 class="board-title">Frogger top scores</h2>
-        <ol class="board-list" id="froggerBoard">
-          <li class="board-empty">Loading…</li>
-        </ol>
-      </div>
-    </section>
-
-    <footer class="home-footer">
-      <p>Stijn's head. Your high scores. No frogs were harmed.</p>
-      <p class="db-status" id="dbStatus"></p>
-    </footer>
-  </main>
+  <footer class="site-foot">
+    <p>© Pragmatict SRL · Belgium</p>
+  </footer>
 
   <script src="js/convex-config.js"></script>
-  <script src="js/db.js"></script>
-  <script src="js/home.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/site.js"></script>
 </body>
 </html>

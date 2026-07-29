@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — My Pragmatict</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+  </div>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img src="assets/snake-head.png" alt="Stijn">
+        <div>
+          <h1>My Pragmatict</h1>
+          <p>Members area</p>
+        </div>
+      </div>
+
+      <h2 class="auth-title" id="authTitle">Sign in</h2>
+      <p class="auth-hint" id="authHint">Sign in to access My Pragmatict and Stijn Arcade.</p>
+
+      <p class="auth-error" id="authError" hidden></p>
+
+      <button type="button" class="btn btn-google" id="googleBtn">
+        Continue with Google
+      </button>
+
+      <div class="divider">or email</div>
+
+      <form id="authForm">
+        <input type="hidden" name="flow" id="flow" value="signIn">
+
+        <div id="credBlock">
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="name@example.com" inputmode="email">
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters">
+          </div>
+          <div class="field" id="nameBlock" hidden>
+            <label for="name">Display name <span class="optional">(optional)</span></label>
+            <input id="name" name="name" type="text" maxlength="24" autocomplete="nickname" placeholder="Shown on the leaderboard">
+          </div>
+        </div>
+
+        <div id="verifyBlock" hidden>
+          <div class="field">
+            <label for="code">Confirmation code</label>
+            <input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="8-digit code" maxlength="8">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">Sign in</button>
+        <button type="button" class="btn btn-link" id="toggleMode">Need an account? Sign up</button>
+      </form>
+
+      <p class="auth-foot">Google works immediately. Email sign-up needs a confirmation code.</p>
+    </div>
+  </main>
+
+  <script src="js/convex-config.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/login.js?v=2"></script>
+</body>
+</html>

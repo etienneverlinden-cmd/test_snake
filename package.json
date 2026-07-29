@@ -5,12 +5,19 @@
   "type": "module",
   "scripts": {
     "dev:convex": "convex dev",
-    "deploy:convex": "convex deploy"
+    "deploy:convex": "convex deploy",
+    "dev:site": "python -m http.server 8080",
+    "auth:keys": "node scripts/set-auth-keys.mjs"
   },
   "dependencies": {
-    "convex": "^1.42.1"
+    "@auth/core": "0.41.1",
+    "@convex-dev/auth": "^0.0.90",
+    "@oslojs/crypto": "^1.0.1",
+    "convex": "^1.42.1",
+    "jose": "^6.0.11"
   },
   "devDependencies": {
+    "@types/node": "^22.10.0",
     "typescript": "^5.7.0"
   }
 }

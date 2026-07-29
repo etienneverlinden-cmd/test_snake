@@ -1,11 +1,29 @@
 (async function () {
   'use strict';
 
+  await (window.ArcadeAuthGuard?.ready || Promise.resolve());
+
   const statusEl = document.getElementById('dbStatus');
+  const userEl = document.getElementById('userBar');
+  const signOutBtn = document.getElementById('signOutBtn');
+
   if (window.ArcadeDB?.convexEnabled()) {
     statusEl.textContent = 'Scores synced with Convex';
   } else {
     statusEl.textContent = 'Convex not configured — using local scores only';
+  }
+
+  const viewer = await window.ArcadeAuth?.getViewer?.();
+  if (userEl && viewer) {
+    const label = viewer.name || viewer.email || 'Player';
+    userEl.textContent = label;
+  }
+
+  if (signOutBtn) {
+    signOutBtn.addEventListener('click', async () => {
+      await window.ArcadeAuth.signOut();
+      window.location.href = 'index.html';
+    });
   }
 
   async function fillBoard(game, el) {

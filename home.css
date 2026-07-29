@@ -87,6 +87,43 @@ body {
   50% { transform: translate(20px, -24px) scale(1.08); }
 }
 
+.user-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.back-public {
+  margin-right: auto;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.back-public:hover {
+  color: var(--foam);
+}
+
+.sign-out {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(232, 255, 244, 0.06);
+  color: var(--foam);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.sign-out:hover {
+  border-color: rgba(31, 227, 160, 0.4);
+}
+
 .home {
   position: relative;
   z-index: 1;

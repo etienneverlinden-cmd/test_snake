@@ -6,12 +6,18 @@ Same pattern as [pawnie](https://github.com/stijnv31/pawnie): Convex schema + fu
 
 | Path | Role |
 |------|------|
-| `convex/schema.ts` | `scores` table |
-| `convex/scores.ts` | `getBestScore`, `getTopScores`, `submitScore` |
-| `js/db.js` | Browser client (`try` Convex → else `localStorage`) like pawnie's `tryConvexQuery` |
+| `convex/schema.ts` | Auth tables + `scores` |
+| `convex/auth.ts` | Google + Password (email verify via Resend) |
+| `convex/scores.ts` | Auth-gated leaderboard APIs |
+| `js/auth.js` | Vanilla Convex Auth client |
+| `login.html` | Sign in / sign up / confirm email |
 | `js/convex-config.js` | Public `STIJN_ARCADE_CONVEX_URL` |
 
-## One-time setup (on your PC)
+## Auth setup
+
+See **AUTH.md** for Google OAuth, Resend, JWT keys, and `SITE_URL`.
+
+## One-time Convex link (on your PC)
 
 ```bash
 cd "…/Test/Snake"
@@ -20,19 +26,13 @@ npx convex login
 npx convex dev
 ```
 
-`npx convex dev` creates a deployment and generates `convex/_generated/`.  
-Copy the printed URL (e.g. `https://happy-animal-123.convex.cloud`) into:
-
-1. `js/convex-config.js` → `window.STIJN_ARCADE_CONVEX_URL = "https://…"`
-2. Optionally `.env` as `CONVEX_URL=…`
-
-Then commit/push so the live site can reach Convex.
+Copy the deployment URL into `js/convex-config.js`.
 
 ## Difference vs pawnie
 
-Pawnie is **Next.js**: the server holds `CONVEX_API_SECRET` and the browser never sees it.  
-This arcade is **static HTML**, so the browser talks to Convex with **public** score functions (validated/sanitized). We cannot hide a secret in the frontend.
+Pawnie is **Next.js** with React Convex Auth.  
+This arcade is **static HTML**, so auth uses the same Convex Auth backend with a small vanilla JS client (`js/auth.js`).
 
 ## Fallback
 
-If `STIJN_ARCADE_CONVEX_URL` is empty or Convex is down, scores still work via `localStorage` (same idea as pawnie falling back when Convex is disabled).
+If Convex is down, local high scores still work in the browser — but **playing the site requires sign-in** when auth is configured.
