@@ -232,7 +232,7 @@ body {
 
 .picker {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   animation: riseIn 0.7s ease 0.12s both;
 }
@@ -375,6 +375,12 @@ body {
   display: block !important;
 }
 
+@media (max-width: 900px) {
+  .picker {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 720px) {
   .hero {
     grid-template-columns: 1fr;
@@ -385,7 +391,6 @@ body {
     margin-inline: auto;
   }
 
-  .picker,
   .leaderboards {
     grid-template-columns: 1fr;
   }

@@ -1,0 +1,167 @@
+.deck-page {
+  gap: 1.5rem;
+}
+
+.deck-header {
+  animation: riseIn 0.7s ease both;
+}
+
+.deck-title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.deck-lede {
+  color: var(--muted);
+  max-width: 42rem;
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+.deck-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1.35rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  animation: riseIn 0.7s ease 0.08s both;
+}
+
+.deck-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.deck-form .field--full {
+  grid-column: 1 / -1;
+}
+
+.deck-form label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.deck-form input,
+.deck-form textarea {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--foam);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.deck-form textarea {
+  resize: vertical;
+  min-height: 10rem;
+  line-height: 1.5;
+}
+
+.deck-form input:focus,
+.deck-form textarea:focus {
+  outline: 2px solid rgba(31, 227, 160, 0.45);
+  outline-offset: 1px;
+}
+
+.deck-error {
+  grid-column: 1 / -1;
+  background: rgba(255, 94, 94, 0.12);
+  border: 1px solid rgba(255, 94, 94, 0.35);
+  color: #ffb4b4;
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+.btn-deck {
+  grid-column: 1 / -1;
+  appearance: none;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--mint), var(--mint-deep));
+  color: #042217;
+}
+
+.btn-deck:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-deck--ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: transparent;
+  color: var(--foam);
+  border: 1px solid var(--line);
+  margin-top: 1rem;
+}
+
+.btn-deck--ghost:hover {
+  border-color: rgba(31, 227, 160, 0.45);
+}
+
+.deck-status {
+  padding: 1.35rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  animation: riseIn 0.5s ease both;
+}
+
+.deck-status-line {
+  margin-top: 0.55rem;
+  color: var(--foam);
+  font-size: 0.95rem;
+}
+
+.deck-status-line .label {
+  display: inline-block;
+  min-width: 4.5rem;
+  color: var(--muted);
+}
+
+.deck-status-line code {
+  font-size: 0.85rem;
+}
+
+.deck-summary {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  white-space: pre-wrap;
+  font-family: var(--body);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.game-pick--deck:hover,
+.game-pick--deck:focus-visible {
+  border-color: rgba(196, 163, 90, 0.55);
+  box-shadow: 0 16px 40px rgba(196, 163, 90, 0.16);
+}
+
+@media (max-width: 720px) {
+  .deck-form {
+    grid-template-columns: 1fr;
+  }
+}

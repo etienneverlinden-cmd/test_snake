@@ -1,0 +1,24 @@
+[Unit]
+Description=Pragmatict Deck Studio API (inbox bridge for Cursor worker)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cursor-worker
+Group=cursor-worker
+WorkingDirectory=/opt/cursor-worker
+EnvironmentFile=-/etc/pragmatict/cursor.env
+Environment=CONVEX_URL=https://limitless-duck-213.convex.cloud
+Environment=DECK_API_HOST=127.0.0.1
+Environment=DECK_API_PORT=8790
+Environment=CURSOR_INBOX=/opt/cursor-worker/inbox
+Environment=CURSOR_OUTBOX=/opt/cursor-worker/outbox
+ExecStart=/usr/bin/python3 /opt/cursor-worker/bin/deck-api.py
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

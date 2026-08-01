@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deck Studio — My Pragmatict</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="deck.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--left"></div>
+    <div class="bg-glow bg-glow--right"></div>
+  </div>
+
+  <main class="home deck-page">
+    <div class="user-bar">
+      <a class="back-public" href="arcade.html">← My Pragmatict</a>
+      <span id="userBar">…</span>
+      <button type="button" class="sign-out" id="signOutBtn">Sign out</button>
+    </div>
+
+    <header class="deck-header">
+      <p class="hero-kicker">My Pragmatict</p>
+      <h1 class="deck-title">Deck Studio</h1>
+      <p class="deck-lede">Describe the presentation you need. Cursor builds a PowerPoint draft on the server.</p>
+    </header>
+
+    <form class="deck-form" id="deckForm">
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" maxlength="120" required placeholder="e.g. Fibre programme board update">
+      </div>
+      <div class="field">
+        <label for="audience">Audience</label>
+        <input id="audience" name="audience" type="text" maxlength="200" placeholder="e.g. Executive committee">
+      </div>
+      <div class="field">
+        <label for="slides">Approx. slides</label>
+        <input id="slides" name="slides" type="number" min="3" max="20" value="8">
+      </div>
+      <div class="field field--full">
+        <label for="brief">Brief</label>
+        <textarea id="brief" name="brief" rows="8" required minlength="20" placeholder="Context, goals, key points, decisions needed, tone…"></textarea>
+      </div>
+      <p class="deck-error" id="deckError" hidden></p>
+      <button type="submit" class="btn-deck" id="submitBtn">Generate PowerPoint</button>
+    </form>
+
+    <section class="deck-status" id="deckStatus" hidden>
+      <h2 class="board-title">Job status</h2>
+      <p class="deck-status-line"><span class="label">ID</span> <code id="jobId">—</code></p>
+      <p class="deck-status-line"><span class="label">Status</span> <span id="jobState">—</span></p>
+      <pre class="deck-summary" id="jobSummary" hidden></pre>
+      <a class="btn-deck btn-deck--ghost" id="downloadBtn" hidden href="#">Download</a>
+    </section>
+  </main>
+
+  <script src="js/convex-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/deck-studio.js"></script>
+</body>
+</html>
