@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Access pending — My Pragmatict</title>
   <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
+  <style>html,body{background:#ffffff}</style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="auth.css?v=3">
 </head>
 <body>
-  <div class="bg" aria-hidden="true"></div>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+  </div>
   <main class="auth-page">
     <div class="auth-card">
       <div class="auth-brand">
@@ -27,7 +30,7 @@
   </main>
   <script src="js/convex-config.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/auth-guard.js"></script>
+  <script src="js/auth-guard.js?v=3"></script>
   <script>
     (async function () {
       await (window.ArcadeAuthGuard && window.ArcadeAuthGuard.ready);

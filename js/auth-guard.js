@@ -22,7 +22,10 @@
     if (document.getElementById('access-gate-style')) return;
     const style = document.createElement('style');
     style.id = 'access-gate-style';
+    // Keep a white canvas while hiding protected UI (visibility:hidden alone
+    // can flash the browser's default dark page background).
     style.textContent =
+      'html.access-checking,html.access-checking body{background:#ffffff!important}' +
       'html.access-checking body{visibility:hidden!important;pointer-events:none!important}';
     document.head.appendChild(style);
   }

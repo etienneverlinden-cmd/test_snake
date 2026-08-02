@@ -8,9 +8,8 @@
 
 :root {
   --ink: #121212;
-  --foam: #121212;
   --paper: #ffffff;
-  --mist: #f7f7f7;
+  --mist: #f7f5f3;
   --muted: #6b6b6b;
   --mint: #be1622;
   --mint-deep: #9a1119;
@@ -18,17 +17,17 @@
   --line: rgba(18, 18, 18, 0.1);
   --display: 'Libre Baskerville', Georgia, serif;
   --body: 'DM Sans', system-ui, sans-serif;
-  --mist: #f7f5f3;
 }
 
 html, body {
   min-height: 100%;
+  background: #ffffff;
 }
 
 body {
   font-family: var(--body);
   color: var(--ink);
-  background: var(--paper);
+  background: #ffffff;
   -webkit-font-smoothing: antialiased;
 }
 
