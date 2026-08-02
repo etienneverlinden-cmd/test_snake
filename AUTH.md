@@ -84,13 +84,27 @@ Also ensure `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM` are set (same as auth emails
 
 **Required before the gate works:** if `ADMIN_EMAIL` is missing, new users become `pending` but no admin email is sent.
 
-## 6. Deploy Convex functions
+## 6. Deploy Convex functions (live backend = duck)
+
+The **static site** (`js/convex-config.js`) and Google OAuth callback use the Convex
+**dev** deployment `limitless-duck-213` — that is the live backend for
+https://pragmatict.be. Auth env vars (`JWT_*`, `ADMIN_EMAIL`, Resend, Google) live there.
+
+| Command | Target | Use for |
+|---------|--------|---------|
+| `npx convex dev` / `npx convex dev --once` | `limitless-duck-213` (dev) | Local work **and** shipping backend to production |
+| `npx convex deploy` | `brilliant-coyote-416` (prod slot) | **Do not use** — site does not point here; env is empty/wrong |
+
+**Ship Convex to the live site:**
 
 ```bash
-npx convex dev
-# or
-npx convex deploy
+npx convex dev --once
+# or: npm run deploy:convex
 ```
+
+Do **not** run `npx convex deploy` expecting to update pragmatict.be — that pushes to the
+unused Convex “production” deployment and will leave the live site on stale functions.
+Leave `brilliant-coyote-416` alone unless you intentionally migrate the site + all env vars.
 
 ## 7. Test locally
 

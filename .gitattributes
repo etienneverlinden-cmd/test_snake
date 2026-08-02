@@ -1,0 +1,3 @@
+# Prevent Windows CRLF from breaking shell scripts on the Linux VPS.
+*.sh text eol=lf
+deploy/cursor-worker/*.sh text eol=lf

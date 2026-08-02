@@ -28,6 +28,20 @@ npx convex dev
 
 Copy the deployment URL into `js/convex-config.js`.
 
+## Live backend (important)
+
+Production static site points at **`limitless-duck-213`** (Convex *dev* deployment),
+not the project’s *prod* slot (`brilliant-coyote-416`).
+
+| Goal | Command |
+|------|---------|
+| Push functions to the live site backend | `npx convex dev --once` (or `npm run deploy:convex`) |
+| Watch / iterate locally | `npx convex dev` |
+| Convex dashboard “prod” slot | `npx convex deploy` — **unused by the site; do not ship here** |
+
+Auth + `ADMIN_EMAIL` + OAuth were configured on duck. Shipping with `convex deploy` only
+updates coyote and breaks production until duck is updated separately.
+
 ## Difference vs pawnie
 
 Pawnie is **Next.js** with React Convex Auth.  

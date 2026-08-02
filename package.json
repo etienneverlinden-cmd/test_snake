@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev:convex": "convex dev",
-    "deploy:convex": "convex deploy",
+    "deploy:convex": "convex dev --once",
     "dev:site": "python -m http.server 8080",
     "auth:keys": "node scripts/set-auth-keys.mjs"
   },
