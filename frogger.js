@@ -1,5 +1,12 @@
-(() => {
+(async () => {
   'use strict';
+
+  if (!window.ArcadeAuthGuard?.ready) {
+    window.location.replace('login.html?next=frogger.html');
+    return;
+  }
+  const allowed = await window.ArcadeAuthGuard.ready;
+  if (!allowed) return;
 
   const COLS = 12;
   const ROWS = 14;

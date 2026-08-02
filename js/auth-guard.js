@@ -1,6 +1,7 @@
 /**
  * Redirect unauthenticated / unapproved visitors.
  * Include on every protected page after convex-config.js + auth.js.
+ * Hides the page until membership is confirmed approved (no fail-open flash).
  */
 (function () {
   'use strict';
@@ -17,18 +18,40 @@
     window.location.replace(path);
   }
 
+  function ensureGateStyle() {
+    if (document.getElementById('access-gate-style')) return;
+    const style = document.createElement('style');
+    style.id = 'access-gate-style';
+    style.textContent =
+      'html.access-checking body{visibility:hidden!important;pointer-events:none!important}';
+    document.head.appendChild(style);
+  }
+
+  function hideUntilResolved() {
+    ensureGateStyle();
+    document.documentElement.classList.add('access-checking');
+  }
+
+  function reveal() {
+    document.documentElement.classList.remove('access-checking');
+  }
+
   async function guard() {
+    // Hide protected UI immediately so content cannot be used before the gate.
+    if (!accessPages.has(here)) {
+      hideUntilResolved();
+    }
+
     if (!window.ArcadeAuth) {
       go(loginPath);
-      return;
+      return false;
     }
     await window.ArcadeAuth.init();
     if (!window.ArcadeAuth.isAuthenticated()) {
       go(`${loginPath}?next=${encodeURIComponent(here)}`);
-      return;
+      return false;
     }
 
-    // Already on an access status page — still refresh membership record.
     let status = null;
     try {
       const result = await window.ArcadeAuth.callMutation(
@@ -38,31 +61,38 @@
       status = result && result.status;
     } catch (err) {
       console.error('[access]', err);
+      reveal();
       go(`${loginPath}?next=${encodeURIComponent(here)}`);
-      return;
+      return false;
     }
 
     if (status === 'approved') {
+      reveal();
       if (accessPages.has(here)) {
         go('arcade.html');
       }
-      return;
+      return true;
     }
     if (status === 'pending') {
+      reveal();
       if (here !== 'access-pending.html') go('access-pending.html');
-      return;
+      return false;
     }
     if (status === 'denied') {
+      reveal();
       if (here !== 'access-denied.html') go('access-denied.html');
-      return;
+      return false;
     }
     if (status === 'unauthorized') {
+      reveal();
       if (here !== 'access-blocked.html') go('access-blocked.html');
-      return;
+      return false;
     }
 
-    // Unknown — treat as pending gate
+    // Unknown / missing status — fail closed to pending gate
+    reveal();
     if (here !== 'access-pending.html') go('access-pending.html');
+    return false;
   }
 
   window.ArcadeAuthGuard = { ready: guard() };

@@ -117,7 +117,7 @@
 
   async function callMutation(path, args) {
     const url = convexUrl();
-    if (!url) return null;
+    if (!url) throw new Error('Convex URL not configured');
     const headers = { 'Content-Type': 'application/json' };
     if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
     const res = await fetch(`${url}/api/mutation`, {
@@ -127,8 +127,13 @@
     });
     const data = await res.json();
     if (!res.ok || data.status === 'error' || data.errorMessage) {
-      console.error('[convex]', path, data.errorMessage || data);
-      return null;
+      const msg =
+        data.errorMessage ||
+        data.message ||
+        (typeof data.error === 'string' ? data.error : null) ||
+        `Mutation failed: ${path}`;
+      console.error('[convex]', path, msg);
+      throw new Error(msg);
     }
     if (Object.prototype.hasOwnProperty.call(data, 'value')) return data.value;
     if (data.status === 'success') return data.value;

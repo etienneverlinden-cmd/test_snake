@@ -1,7 +1,12 @@
 (async function () {
   'use strict';
 
-  await (window.ArcadeAuthGuard?.ready || Promise.resolve());
+  if (!window.ArcadeAuthGuard?.ready) {
+    window.location.replace('login.html?next=deck-studio.html');
+    return;
+  }
+  const allowed = await window.ArcadeAuthGuard.ready;
+  if (!allowed) return;
 
   const form = document.getElementById('deckForm');
   const errorEl = document.getElementById('deckError');

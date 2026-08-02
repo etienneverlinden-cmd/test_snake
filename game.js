@@ -1,5 +1,12 @@
-(() => {
+(async () => {
   'use strict';
+
+  if (!window.ArcadeAuthGuard?.ready) {
+    window.location.replace('login.html?next=snake.html');
+    return;
+  }
+  const allowed = await window.ArcadeAuthGuard.ready;
+  if (!allowed) return;
 
   const GRID_SIZE = 20;
   const CELL = 20;

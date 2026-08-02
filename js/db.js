@@ -20,12 +20,20 @@
 
   async function tryConvexQuery(path, args) {
     if (!convexEnabled() || !global.ArcadeAuth) return null;
-    return global.ArcadeAuth.callQuery(path, args);
+    try {
+      return await global.ArcadeAuth.callQuery(path, args);
+    } catch {
+      return null;
+    }
   }
 
   async function tryConvexMutation(path, args) {
     if (!convexEnabled() || !global.ArcadeAuth) return null;
-    return global.ArcadeAuth.callMutation(path, args);
+    try {
+      return await global.ArcadeAuth.callMutation(path, args);
+    } catch {
+      return null;
+    }
   }
 
   function localBest(game) {

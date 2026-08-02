@@ -1,4 +1,9 @@
-import { httpAction, internalMutation, mutation } from "./_generated/server";
+import {
+  httpAction,
+  internalMutation,
+  internalQuery,
+  mutation,
+} from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
@@ -12,8 +17,18 @@ function convexSiteUrl() {
   return (process.env.CONVEX_SITE_URL || "").replace(/\/$/, "");
 }
 
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
+
+/** Exact match only (trimmed, case-insensitive). No substring/domain matching. */
 function adminEmail() {
-  return (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+  return normalizeEmail(process.env.ADMIN_EMAIL || "");
+}
+
+function isAdminEmail(email: string) {
+  const admin = adminEmail();
+  return !!admin && normalizeEmail(email) === admin;
 }
 
 function newToken() {
@@ -44,7 +59,7 @@ export const ensureAndGet = mutation({
     const user = await ctx.db.get(userId);
     if (!user) throw new Error("Not authenticated");
 
-    const email = (user.email || "").trim().toLowerCase();
+    const email = normalizeEmail(user.email || "");
     if (!email) throw new Error("Account has no email");
 
     const existing = await ctx.db
@@ -52,8 +67,7 @@ export const ensureAndGet = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
 
-    const admin = adminEmail();
-    const isAdmin = admin && email === admin;
+    const isAdmin = isAdminEmail(email);
 
     if (!existing) {
       const token = newToken();
@@ -146,12 +160,88 @@ export const requestAgain = mutation({
       decisionToken: token,
       requestedAt: Date.now(),
       name: user.name,
-      email: (user.email || existing.email).trim().toLowerCase(),
+      email: normalizeEmail(user.email || existing.email),
     });
     await ctx.scheduler.runAfter(0, internal.access.notifyAdminPending, {
       accessId: existing._id,
     });
     return { status: "pending" as const };
+  },
+});
+
+/** Inspect membership rows by email (ops / `npx convex run`). */
+export const listByEmail = internalQuery({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const email = normalizeEmail(args.email);
+    const rows = await ctx.db
+      .query("memberAccess")
+      .withIndex("by_email", (q) => q.eq("email", email))
+      .collect();
+    return rows.map((r) => ({
+      id: r._id,
+      userId: r.userId,
+      email: r.email,
+      status: r.status,
+      denyCount: r.denyCount,
+      requestedAt: r.requestedAt,
+      decidedAt: r.decidedAt,
+    }));
+  },
+});
+
+/**
+ * Reset membership for an email to pending (or delete if remove=true).
+ * Does not touch ADMIN_EMAIL accounts.
+ *
+ * Example:
+ *   npx convex run access:resetByEmail '{"email":"user@example.com"}' --push
+ */
+export const resetByEmail = internalMutation({
+  args: {
+    email: v.string(),
+    remove: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const email = normalizeEmail(args.email);
+    if (!email) throw new Error("email required");
+    if (isAdminEmail(email)) {
+      throw new Error("Refusing to reset ADMIN_EMAIL membership");
+    }
+
+    const rows = await ctx.db
+      .query("memberAccess")
+      .withIndex("by_email", (q) => q.eq("email", email))
+      .collect();
+
+    if (rows.length === 0) {
+      return { ok: true as const, matched: 0, action: "none" as const };
+    }
+
+    if (args.remove) {
+      for (const row of rows) {
+        await ctx.db.delete(row._id);
+      }
+      return {
+        ok: true as const,
+        matched: rows.length,
+        action: "deleted" as const,
+      };
+    }
+
+    for (const row of rows) {
+      await ctx.db.patch(row._id, {
+        status: "pending",
+        denyCount: 0,
+        decisionToken: newToken(),
+        requestedAt: Date.now(),
+      });
+    }
+    return {
+      ok: true as const,
+      matched: rows.length,
+      action: "pending" as const,
+    };
   },
 });
 

@@ -1,7 +1,12 @@
 (async function () {
   'use strict';
 
-  await (window.ArcadeAuthGuard?.ready || Promise.resolve());
+  if (!window.ArcadeAuthGuard?.ready) {
+    window.location.replace('login.html?next=arcade.html');
+    return;
+  }
+  const allowed = await window.ArcadeAuthGuard.ready;
+  if (!allowed) return;
 
   const statusEl = document.getElementById('dbStatus');
   const userEl = document.getElementById('userBar');
