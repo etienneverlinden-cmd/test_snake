@@ -1,5 +1,7 @@
 # Auth setup (My Pragmatict)
 
+Detailed membership access approval docs (architecture, flows, how to update): [`docs/access-approval/`](docs/access-approval/).
+
 The site is locked behind **Convex Auth**, then a **membership approval** gate:
 
 1. User signs in (Google or email + password + confirmation code).

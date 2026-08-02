@@ -1,5 +1,7 @@
 # Convex setup (Stijn Arcade)
 
+Membership access approval (gate + emails + deploy pitfalls): [`docs/access-approval/`](docs/access-approval/).
+
 Same pattern as [pawnie](https://github.com/stijnv31/pawnie): Convex schema + functions, a thin client wrapper, and a **local fallback** when Convex is not configured.
 
 ## What was added
