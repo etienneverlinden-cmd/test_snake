@@ -555,6 +555,33 @@
       tryHop(...map[d]);
     });
   });
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  function handleTouchStart(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+  function handleTouchEnd(e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    if (Math.max(absDx, absDy) < 30) return;
+    const dir =
+      absDx > absDy
+        ? dx > 0
+          ? [1, 0]
+          : [-1, 0]
+        : dy > 0
+          ? [0, 1]
+          : [0, -1];
+    if (state === 'idle' || state === 'gameover') startGame();
+    else if (state === 'playing') tryHop(...dir);
+  }
+  canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+  canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
+
   document.addEventListener('keydown', handleKey);
 
   // idle attract screen

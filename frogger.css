@@ -363,4 +363,23 @@ kbd {
   .control-hints { display: none; }
   .mobile-controls { display: block; }
   .scoreboard { grid-template-columns: repeat(2, 1fr); }
+
+  #gameCanvas {
+    touch-action: none;
+  }
+}
+
+@media (max-width: 430px) {
+  .header {
+    margin-bottom: 0.65rem;
+  }
+
+  .scoreboard {
+    gap: 0.45rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .mobile-controls {
+    margin-top: 0.75rem;
+  }
 }

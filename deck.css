@@ -525,4 +525,14 @@
   .deck-actions .btn-deck {
     width: 100%;
   }
+
+  .deck-draft,
+  .slide-preview-strip,
+  .chat-log,
+  code,
+  pre {
+    max-width: 100%;
+    overflow-x: auto;
+    word-break: break-word;
+  }
 }

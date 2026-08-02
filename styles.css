@@ -773,14 +773,19 @@ kbd {
     align-items: center;
   }
 
+  /* Game first on phone/tablet; mascot below (was order: -1) */
   .mascot-panel {
     position: static;
     max-width: 400px;
-    order: -1;
+    order: 1;
   }
 
   .funny-snake {
     height: 300px;
+  }
+
+  #gameCanvas {
+    touch-action: none;
   }
 }
 
@@ -799,6 +804,10 @@ kbd {
 
   .mobile-controls {
     display: block;
+  }
+
+  .mascot-panel {
+    display: none;
   }
 }
 

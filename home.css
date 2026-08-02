@@ -305,4 +305,28 @@ body {
   .game-pick-cta {
     grid-column: 2;
   }
+
+  .user-bar {
+    flex-wrap: wrap;
+    row-gap: 0.45rem;
+  }
+
+  .back-logo {
+    height: 26px;
+  }
+
+  .user-bar #userBar {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .board-list .name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
