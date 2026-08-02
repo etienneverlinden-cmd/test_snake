@@ -2,7 +2,7 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import type { Doc, Id } from "./_generated/dataModel";
-import type { MutationCtx } from "./_generated/server";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
 
 const gameValidator = v.union(v.literal("snake"), v.literal("frogger"));
 
@@ -11,7 +11,7 @@ function sanitizeName(name: string): string {
   return cleaned || "Player";
 }
 
-async function requireUser(ctx: MutationCtx): Promise<{
+async function requireApprovedUser(ctx: MutationCtx): Promise<{
   userId: Id<"users">;
   user: Doc<"users">;
 }> {
@@ -19,7 +19,27 @@ async function requireUser(ctx: MutationCtx): Promise<{
   if (!userId) throw new Error("Not authenticated");
   const user = await ctx.db.get(userId);
   if (!user) throw new Error("Not authenticated");
+  const access = await ctx.db
+    .query("memberAccess")
+    .withIndex("by_user", (q) => q.eq("userId", userId))
+    .unique();
+  if (!access || access.status !== "approved") {
+    throw new Error("Not authorised");
+  }
   return { userId, user };
+}
+
+async function requireApprovedUserId(
+  ctx: QueryCtx,
+): Promise<Id<"users"> | null> {
+  const userId = await getAuthUserId(ctx);
+  if (!userId) return null;
+  const access = await ctx.db
+    .query("memberAccess")
+    .withIndex("by_user", (q) => q.eq("userId", userId))
+    .unique();
+  if (!access || access.status !== "approved") return null;
+  return userId;
 }
 
 function displayName(
@@ -38,7 +58,7 @@ function displayName(
 export const getBestScore = query({
   args: { game: gameValidator },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
+    const userId = await requireApprovedUserId(ctx);
     if (!userId) return null;
 
     const top = await ctx.db
@@ -63,7 +83,7 @@ export const getTopScores = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
+    const userId = await requireApprovedUserId(ctx);
     if (!userId) return [];
 
     const limit = Math.min(Math.max(args.limit ?? 10, 1), 50);
@@ -88,7 +108,7 @@ export const submitScore = mutation({
     score: v.number(),
   },
   handler: async (ctx, args) => {
-    const { userId, user } = await requireUser(ctx);
+    const { userId, user } = await requireApprovedUser(ctx);
     const score = Math.max(0, Math.floor(args.score));
     if (!Number.isFinite(score)) throw new Error("invalid score");
     const playerName = displayName(user, args.playerName || "Player");

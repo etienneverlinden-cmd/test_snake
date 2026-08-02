@@ -9,7 +9,9 @@
  */
 
 import type * as ResendOTP from "../ResendOTP.js";
+import type * as access from "../access.js";
 import type * as auth from "../auth.js";
+import type * as email from "../email.js";
 import type * as http from "../http.js";
 import type * as scores from "../scores.js";
 import type * as users from "../users.js";
@@ -22,7 +24,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   ResendOTP: typeof ResendOTP;
+  access: typeof access;
   auth: typeof auth;
+  email: typeof email;
   http: typeof http;
   scores: typeof scores;
   users: typeof users;

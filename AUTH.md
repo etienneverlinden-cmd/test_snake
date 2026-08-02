@@ -1,9 +1,14 @@
-# Auth setup (Stijn Arcade)
+# Auth setup (My Pragmatict)
 
-The arcade is locked behind **Convex Auth**:
+The site is locked behind **Convex Auth**, then a **membership approval** gate:
 
-- **Google** → play immediately after sign-in  
-- **Email + password** → must enter the confirmation code from email before playing  
+1. User signs in (Google or email + password + confirmation code).
+2. First visit creates an access request → **you** get an email with Approve / Deny links.
+3. Approve → user gets an email and can use My Pragmatict.
+4. Deny once → user can request again from the denied page.
+5. Deny a second time → status becomes **unauthorized** (no further requests).
+
+The address in `ADMIN_EMAIL` is auto-approved on first login (so you are never locked out).
 
 `main` auto-deploys the static site. Keep this work on a feature branch until you are ready to ship.
 
@@ -65,7 +70,21 @@ npx convex env set AUTH_EMAIL_FROM "Stijn Arcade <noreply@yourdomain.com>"
 
 Until a domain is verified, Resend’s `onboarding@resend.dev` only delivers to your Resend account email.
 
-## 5. Deploy Convex functions
+## 5. Membership admin email (required)
+
+```bash
+npx convex env set ADMIN_EMAIL "you@yourdomain.com"
+```
+
+Approve/deny links in admin emails use Convex’s built-in `CONVEX_SITE_URL` (`https://….convex.site/access/decide?...`).  
+That value is injected automatically — do **not** run `npx convex env set CONVEX_SITE_URL` (Convex rejects it as `EnvVarNameForbidden`).  
+User grant emails use `SITE_URL` (link to `/login.html?next=arcade.html`).
+
+Also ensure `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM` are set (same as auth emails).
+
+**Required before the gate works:** if `ADMIN_EMAIL` is missing, new users become `pending` but no admin email is sent.
+
+## 6. Deploy Convex functions
 
 ```bash
 npx convex dev
@@ -73,10 +92,19 @@ npx convex dev
 npx convex deploy
 ```
 
-## 6. Test locally
+## 7. Test locally
 
 ```bash
+npx convex dev
 npm run dev:site
 ```
 
 Open `http://localhost:8080/login.html`.
+
+**Access gate checklist**
+
+1. Sign in as a non-admin → redirected to `access-pending.html`; admin receives Approve/Deny email.
+2. Click Approve → user gets grant email; pending page (or next visit) opens My Pragmatict.
+3. Deny once → user sees `access-denied.html` and can request again.
+4. Deny the second request → `access-blocked.html` (permanent).
+5. Sign in as `ADMIN_EMAIL` → auto-approved, no pending gate.

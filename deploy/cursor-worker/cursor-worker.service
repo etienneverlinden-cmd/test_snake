@@ -9,7 +9,7 @@ User=cursor-worker
 Group=cursor-worker
 WorkingDirectory=/opt/cursor-worker/work
 EnvironmentFile=-/etc/pragmatict/cursor.env
-Environment=PATH=/opt/cursor-worker/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PATH=/opt/cursor-worker/.venv/bin:/opt/cursor-worker/.local/bin:/usr/local/bin:/usr/bin:/bin
 ExecStart=/opt/cursor-worker/bin/worker.sh
 Restart=always
 RestartSec=10

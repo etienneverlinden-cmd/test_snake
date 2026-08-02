@@ -66,7 +66,7 @@
       emailEl.focus();
     } else {
       titleEl.textContent = 'Sign in';
-      hintEl.textContent = 'Sign in to access My Pragmatict and Stijn Arcade.';
+      hintEl.textContent = 'Sign in to access My Pragmatict.';
       credBlock.hidden = false;
       nameBlock.hidden = true;
       verifyBlock.hidden = true;

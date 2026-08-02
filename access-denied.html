@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access denied — My Pragmatict</title>
+  <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img src="assets/pragmatict-logo.png" alt="PragmatICT">
+      </div>
+      <h2 class="auth-title">Access denied</h2>
+      <p class="auth-hint" id="hint">
+        Your request was denied. You may request access one more time.
+      </p>
+      <p class="auth-error" id="error" hidden></p>
+      <button type="button" class="btn btn-primary" id="requestBtn">Request access again</button>
+      <button type="button" class="btn btn-link" id="signOutBtn">Sign out</button>
+    </div>
+  </main>
+  <script src="js/convex-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script>
+    (async function () {
+      await (window.ArcadeAuthGuard && window.ArcadeAuthGuard.ready);
+      document.getElementById('signOutBtn').addEventListener('click', async () => {
+        await window.ArcadeAuth.signOut();
+        window.location.href = 'index.html';
+      });
+      document.getElementById('requestBtn').addEventListener('click', async () => {
+        const err = document.getElementById('error');
+        err.hidden = true;
+        try {
+          const result = await window.ArcadeAuth.callMutation('access:requestAgain', {});
+          if (result && result.status === 'pending') {
+            window.location.replace('access-pending.html');
+            return;
+          }
+          if (result && result.status === 'approved') {
+            window.location.replace('arcade.html');
+            return;
+          }
+          throw new Error('Could not submit request');
+        } catch (e) {
+          err.textContent = e.message || 'Request failed';
+          err.hidden = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

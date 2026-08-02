@@ -14,6 +14,7 @@ Environment=DECK_API_HOST=127.0.0.1
 Environment=DECK_API_PORT=8790
 Environment=CURSOR_INBOX=/opt/cursor-worker/inbox
 Environment=CURSOR_OUTBOX=/opt/cursor-worker/outbox
+Environment=CURSOR_ATTACHMENTS=/opt/cursor-worker/attachments
 ExecStart=/usr/bin/python3 /opt/cursor-worker/bin/deck-api.py
 Restart=always
 RestartSec=5

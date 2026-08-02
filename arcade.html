@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Pragmatict — Stijn Arcade</title>
+  <title>My Pragmatict</title>
+  <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="home.css">
 </head>
 <body>
@@ -18,18 +19,14 @@
 
   <main class="home">
     <div class="user-bar">
-      <a class="back-public" href="index.html">← Pragmatict</a>
-      <span id="userBar">…</span>
+      <a class="back-public" href="index.html">
+        <img class="back-logo" src="assets/pragmatict-logo.png" alt="PragmatICT">
+      </a>
+      <span id="userBar">&hellip;</span>
       <button type="button" class="sign-out" id="signOutBtn">Sign out</button>
     </div>
 
     <section class="hero">
-      <div class="hero-portrait-wrap">
-        <img class="hero-portrait" src="assets/snake-head.png" alt="Stijn">
-        <div class="hero-ring" aria-hidden="true"></div>
-        <span class="hero-badge">PLAYER ONE</span>
-      </div>
-
       <div class="hero-copy">
         <p class="hero-kicker">My Pragmatict</p>
         <h1 class="hero-title">Tools<br>&amp; Arcade</h1>
@@ -39,30 +36,30 @@
 
     <section class="picker" aria-label="Choose a tool">
       <a class="game-pick game-pick--snake" href="snake.html">
-        <span class="game-pick-icon" aria-hidden="true">🐍</span>
+        <span class="game-pick-icon" aria-hidden="true">S</span>
         <span class="game-pick-body">
           <span class="game-pick-name">Snake</span>
           <span class="game-pick-desc">Eat, grow, don't crash. Serpent awaits.</span>
         </span>
-        <span class="game-pick-cta">Play →</span>
+        <span class="game-pick-cta">Play &rarr;</span>
       </a>
 
       <a class="game-pick game-pick--frog" href="frogger.html">
-        <span class="game-pick-icon" aria-hidden="true">🐸</span>
+        <span class="game-pick-icon" aria-hidden="true">F</span>
         <span class="game-pick-body">
           <span class="game-pick-name">Frogger</span>
-          <span class="game-pick-desc">Cross roads and rivers. Stijn hops home.</span>
+          <span class="game-pick-desc">Cross roads and rivers. Hop home safely.</span>
         </span>
-        <span class="game-pick-cta">Play →</span>
+        <span class="game-pick-cta">Play &rarr;</span>
       </a>
 
       <a class="game-pick game-pick--deck" href="deck-studio.html">
-        <span class="game-pick-icon" aria-hidden="true">📊</span>
+        <span class="game-pick-icon" aria-hidden="true">D</span>
         <span class="game-pick-body">
           <span class="game-pick-name">Deck Studio</span>
           <span class="game-pick-desc">Describe a brief. Cursor drafts a PowerPoint.</span>
         </span>
-        <span class="game-pick-cta">Open →</span>
+        <span class="game-pick-cta">Open &rarr;</span>
       </a>
     </section>
 
@@ -70,19 +67,19 @@
       <div class="board">
         <h2 class="board-title">Snake top scores</h2>
         <ol class="board-list" id="snakeBoard">
-          <li class="board-empty">Loading…</li>
+          <li class="board-empty">Loading&hellip;</li>
         </ol>
       </div>
       <div class="board">
         <h2 class="board-title">Frogger top scores</h2>
         <ol class="board-list" id="froggerBoard">
-          <li class="board-empty">Loading…</li>
+          <li class="board-empty">Loading&hellip;</li>
         </ol>
       </div>
     </section>
 
     <footer class="home-footer">
-      <p>Stijn's head. Your high scores. No frogs were harmed.</p>
+      <p>Pragmatict tools &amp; arcade. Your high scores stay with you.</p>
       <p class="db-status" id="dbStatus"></p>
     </footer>
   </main>

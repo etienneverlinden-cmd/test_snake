@@ -3,12 +3,14 @@
 # Job JSON example:
 # {
 #   "id": "deck-001",
-#   "prompt": "Create a 6-slide PowerPoint about fibre rollout governance...",
+#   "type": "draft" | "generate",
+#   "prompt": "...",
+#   "attachments": [{"name":"...", "path":"/opt/cursor-worker/attachments/..."}],
 #   "createdAt": "2026-08-01T12:00:00Z"
 # }
 set -euo pipefail
 
-export PATH="/opt/cursor-worker/.local/bin:${PATH}"
+export PATH="/opt/cursor-worker/.venv/bin:/opt/cursor-worker/.local/bin:${PATH}"
 
 ENV_FILE="${CURSOR_ENV_FILE:-/etc/pragmatict/cursor.env}"
 if [[ -f "$ENV_FILE" ]]; then
@@ -46,13 +48,62 @@ while true; do
     echo "[$(date -u +%FT%TZ)] Processing $base" | tee -a "$log"
     mkdir -p "$done_dir"
 
-    prompt="$(python3 - <<'PY' "$processing"
-import json, sys
-with open(sys.argv[1], encoding="utf-8") as f:
-    data = json.load(f)
-print(data.get("prompt") or data.get("brief") or "")
+    meta_dir="$(mktemp -d)"
+    set +e
+    python3 - <<'PY' "$processing" "$done_dir" "$meta_dir"
+import json, sys, shutil
+from pathlib import Path
+
+processing = Path(sys.argv[1])
+done_dir = Path(sys.argv[2])
+meta_dir = Path(sys.argv[3])
+try:
+    with processing.open(encoding="utf-8") as f:
+        data = json.load(f)
+except Exception as e:
+    print(f"__JSON_ERROR__:{e}", file=sys.stderr)
+    sys.exit(2)
+
+job_type = (data.get("type") or "generate").strip().lower()
+prompt = data.get("prompt") or data.get("brief") or ""
+
+atts = data.get("attachments") or []
+staged = []
+if isinstance(atts, list) and atts:
+    dest_root = done_dir / "attachments"
+    dest_root.mkdir(parents=True, exist_ok=True)
+    for a in atts:
+        if not isinstance(a, dict):
+            continue
+        src = Path(str(a.get("path") or ""))
+        name = str(a.get("name") or src.name or "file")
+        if src.is_file():
+            target = dest_root / name
+            try:
+                shutil.copy2(src, target)
+                staged.append(str(target))
+            except Exception as e:
+                print(f"attach-copy-fail:{name}:{e}", file=sys.stderr)
+
+(meta_dir / "type.txt").write_text(job_type, encoding="utf-8")
+(meta_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
+(meta_dir / "staged.txt").write_text("\n".join(staged), encoding="utf-8")
 PY
-)"
+    parse_status=$?
+    set -e
+
+    if [[ $parse_status -ne 0 ]]; then
+      echo "Invalid JSON in $base" | tee -a "$log"
+      rm -rf "$meta_dir"
+      mv "$processing" "${done_dir}/request.json"
+      echo '{"status":"error","error":"invalid json"}' > "${done_dir}/result.json"
+      continue
+    fi
+
+    job_type="$(cat "${meta_dir}/type.txt")"
+    prompt="$(cat "${meta_dir}/prompt.txt")"
+    staged_paths="$(cat "${meta_dir}/staged.txt")"
+    rm -rf "$meta_dir"
 
     if [[ -z "$prompt" ]]; then
       echo "Empty prompt in $base" | tee -a "$log"
@@ -61,13 +112,29 @@ PY
       continue
     fi
 
-    # Ask agent to write outputs into the job outbox folder
-    full_prompt="$prompt
+    attach_note=""
+    if [[ -n "$staged_paths" ]]; then
+      attach_note="
+Staged copies of attachments are also under: ${done_dir}/attachments/
+"
+    fi
 
-Save any generated files under: ${done_dir}
-Prefer creating a PowerPoint (.pptx) when the request is for a presentation.
+    if [[ "$job_type" == "draft" ]]; then
+      full_prompt="$prompt
+${attach_note}
+IMPORTANT: This is a DRAFT-ONLY job. Do NOT create a .pptx file.
+Save the full slide outline/text as: ${done_dir}/draft.md
 When finished, write a short summary to ${done_dir}/summary.txt
 "
+    else
+      full_prompt="$prompt
+${attach_note}
+Save any generated files under: ${done_dir}
+Create a PowerPoint (.pptx) for this generation job.
+Also save the final slide text as ${done_dir}/draft.md for continuity.
+When finished, write a short summary to ${done_dir}/summary.txt
+"
+    fi
 
     set +e
     /opt/cursor-worker/.local/bin/agent -p --force --trust \
@@ -80,11 +147,11 @@ When finished, write a short summary to ${done_dir}/summary.txt
 
     mv "$processing" "${done_dir}/request.json"
     if [[ $status -eq 0 ]]; then
-      echo "{\"status\":\"ok\",\"finishedAt\":\"$(date -u +%FT%TZ)\"}" > "${done_dir}/result.json"
+      echo "{\"status\":\"ok\",\"type\":\"${job_type}\",\"finishedAt\":\"$(date -u +%FT%TZ)\"}" > "${done_dir}/result.json"
     else
-      echo "{\"status\":\"error\",\"exitCode\":$status,\"finishedAt\":\"$(date -u +%FT%TZ)\"}" > "${done_dir}/result.json"
+      echo "{\"status\":\"error\",\"type\":\"${job_type}\",\"exitCode\":$status,\"finishedAt\":\"$(date -u +%FT%TZ)\"}" > "${done_dir}/result.json"
     fi
-    echo "[$(date -u +%FT%TZ)] Finished $base status=$status" | tee -a "$log"
+    echo "[$(date -u +%FT%TZ)] Finished $base type=$job_type status=$status" | tee -a "$log"
   done
 
   sleep "$POLL_SECONDS"

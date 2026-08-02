@@ -2,7 +2,7 @@
 # Run a one-shot headless Cursor agent job.
 set -euo pipefail
 
-export PATH="/opt/cursor-worker/.local/bin:${PATH}"
+export PATH="/opt/cursor-worker/.venv/bin:/opt/cursor-worker/.local/bin:${PATH}"
 
 ENV_FILE="${CURSOR_ENV_FILE:-/etc/pragmatict/cursor.env}"
 if [[ -f "$ENV_FILE" ]]; then

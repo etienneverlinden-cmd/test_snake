@@ -7,16 +7,18 @@
 }
 
 :root {
-  --ink: #07110e;
-  --foam: #e8fff4;
-  --muted: #8aa898;
-  --mint: #1fe3a0;
-  --mint-deep: #0bb87a;
-  --amber: #ffb020;
-  --panel: rgba(10, 28, 22, 0.72);
-  --line: rgba(232, 255, 244, 0.12);
-  --display: 'Syne', system-ui, sans-serif;
-  --body: 'Outfit', system-ui, sans-serif;
+  --ink: #121212;
+  --foam: #121212;
+  --paper: #ffffff;
+  --mist: #f7f7f7;
+  --muted: #6b6b6b;
+  --mint: #be1622;
+  --mint-deep: #9a1119;
+  --panel: #ffffff;
+  --line: rgba(18, 18, 18, 0.1);
+  --display: 'Libre Baskerville', Georgia, serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+  --mist: #f7f5f3;
 }
 
 html, body {
@@ -25,8 +27,8 @@ html, body {
 
 body {
   font-family: var(--body);
-  color: var(--foam);
-  background: var(--ink);
+  color: var(--ink);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -35,19 +37,11 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(31, 227, 160, 0.18), transparent 55%),
-    linear-gradient(165deg, #06140f 0%, #0a1c16 45%, #08120f 100%);
+  background: #ffffff;
 }
 
 .bg-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(232, 255, 244, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232, 255, 244, 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  display: none;
 }
 
 .auth-page {
@@ -65,8 +59,7 @@ body {
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 1.75rem 1.5rem 1.5rem;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 18px 48px rgba(18, 18, 18, 0.08);
 }
 
 .auth-brand {
@@ -77,25 +70,9 @@ body {
 }
 
 .auth-brand img {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(31, 227, 160, 0.45);
-}
-
-.auth-brand h1 {
-  font-family: var(--display);
-  font-size: 1.55rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.auth-brand p {
-  color: var(--muted);
-  font-size: 0.85rem;
-  margin-top: 0.15rem;
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .auth-title {
@@ -113,9 +90,9 @@ body {
 }
 
 .auth-error {
-  background: rgba(255, 94, 94, 0.12);
-  border: 1px solid rgba(255, 94, 94, 0.35);
-  color: #ffb4b4;
+  background: rgba(190, 22, 34, 0.08);
+  border: 1px solid rgba(190, 22, 34, 0.28);
+  color: #9a1119;
   border-radius: 10px;
   padding: 0.7rem 0.85rem;
   font-size: 0.88rem;
@@ -142,9 +119,9 @@ body {
 
 .field input {
   appearance: none;
-  border: 1px solid rgba(232, 255, 244, 0.22);
-  background: rgba(0, 0, 0, 0.45);
-  color: var(--foam);
+  border: 1px solid var(--line);
+  background: var(--mist);
+  color: var(--ink);
   border-radius: 12px;
   padding: 0.85rem 0.95rem;
   font: inherit;
@@ -153,13 +130,14 @@ body {
 }
 
 .field input::placeholder {
-  color: rgba(138, 168, 152, 0.75);
+  color: rgba(107, 107, 107, 0.75);
 }
 
 .field input:focus {
-  outline: 2px solid rgba(31, 227, 160, 0.55);
+  outline: 2px solid rgba(190, 22, 34, 0.35);
   outline-offset: 1px;
-  border-color: rgba(31, 227, 160, 0.55);
+  border-color: rgba(190, 22, 34, 0.55);
+  background: #fff;
 }
 
 .btn {
@@ -188,13 +166,13 @@ body {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--mint), var(--mint-deep));
-  color: #042217;
+  color: #fff;
   margin-top: 0.35rem;
 }
 
 .btn-google {
-  background: rgba(232, 255, 244, 0.06);
-  color: var(--foam);
+  background: var(--mist);
+  color: var(--ink);
   border: 1px solid var(--line);
   margin-bottom: 1rem;
 }
@@ -208,7 +186,7 @@ body {
 }
 
 .btn-link:hover {
-  color: var(--foam);
+  color: var(--mint);
 }
 
 .divider {
@@ -233,4 +211,9 @@ body {
   text-align: center;
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+.auth-foot a {
+  color: var(--mint);
+  text-decoration: none;
 }

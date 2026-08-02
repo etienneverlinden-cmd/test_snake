@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deck Studio — My Pragmatict</title>
+  <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="home.css">
   <link rel="stylesheet" href="deck.css">
 </head>
@@ -25,11 +26,19 @@
     </div>
 
     <header class="deck-header">
+      <img class="deck-brand-mark" src="assets/pragmatict-logo.png" alt="PragmatICT">
       <p class="hero-kicker">My Pragmatict</p>
       <h1 class="deck-title">Deck Studio</h1>
-      <p class="deck-lede">Describe the presentation you need. Cursor builds a PowerPoint draft on the server.</p>
+      <p class="deck-lede">Brief → review slide text with AI → approve → PowerPoint. Attach a reference deck and images if you have them.</p>
     </header>
 
+    <ol class="deck-steps" id="deckSteps" aria-label="Progress">
+      <li class="is-active" data-step="brief">1. Brief</li>
+      <li data-step="review">2. Review</li>
+      <li data-step="generate">3. PowerPoint</li>
+    </ol>
+
+    <!-- Phase 1: brief + attachments -->
     <form class="deck-form" id="deckForm">
       <div class="field">
         <label for="title">Title</label>
@@ -44,19 +53,92 @@
         <input id="slides" name="slides" type="number" min="3" max="20" value="8">
       </div>
       <div class="field field--full">
-        <label for="brief">Brief</label>
-        <textarea id="brief" name="brief" rows="8" required minlength="20" placeholder="Context, goals, key points, decisions needed, tone…"></textarea>
+        <div class="label-row">
+          <label for="brief">Brief</label>
+          <button type="button" class="btn-mic" id="briefMicBtn" aria-pressed="false" title="Dictate with microphone">
+            <span class="mic-icon" aria-hidden="true"></span>
+            <span class="mic-label">Dictate</span>
+          </button>
+        </div>
+        <textarea id="brief" name="brief" rows="8" required minlength="20" placeholder="Context, goals, key points, decisions needed, tone… (or use Dictate)"></textarea>
+        <p class="field-hint" id="briefMicHint" hidden>Listening… speak clearly. Click Dictate again to stop.</p>
       </div>
+
+      <div class="field field--full">
+        <label for="pptxFile">Reference PowerPoint <span class="optional">(optional)</span></label>
+        <p class="field-hint">Attach an existing .pptx for format and/or content reference.</p>
+        <input id="pptxFile" name="pptxFile" type="file" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+        <ul class="file-list" id="pptxList" hidden></ul>
+      </div>
+
+      <div class="field field--full">
+        <label for="imageFiles">Images for the brief <span class="optional">(optional)</span></label>
+        <p class="field-hint">Add diagrams, screenshots, or photos the deck should use.</p>
+        <input id="imageFiles" name="imageFiles" type="file" accept="image/*" multiple>
+        <ul class="file-list" id="imageList" hidden></ul>
+        <div class="image-previews" id="imagePreviews" hidden></div>
+      </div>
+
       <p class="deck-error" id="deckError" hidden></p>
-      <button type="submit" class="btn-deck" id="submitBtn">Generate PowerPoint</button>
+      <button type="submit" class="btn-deck" id="draftBtn">Draft outline</button>
     </form>
 
-    <section class="deck-status" id="deckStatus" hidden>
-      <h2 class="board-title">Job status</h2>
-      <p class="deck-status-line"><span class="label">ID</span> <code id="jobId">—</code></p>
+    <!-- Waiting indicator (shared) -->
+    <section class="deck-status" id="deckWaiting" hidden>
+      <h2 class="board-title" id="waitingTitle">Working…</h2>
+      <p class="deck-status-line"><span class="label">Job</span> <code id="jobId">—</code></p>
       <p class="deck-status-line"><span class="label">Status</span> <span id="jobState">—</span></p>
+      <p class="deck-waiting-note" id="waitingNote">The Cursor worker is drafting your slide text. This can take a few minutes.</p>
+    </section>
+
+    <!-- Phase 2: review draft + chat -->
+    <section class="deck-review" id="deckReview" hidden>
+      <h2 class="board-title">Review outline &amp; format</h2>
+      <p class="deck-review-lede">Check the slide text and the visual PowerPoint-style preview. Ask for content or formatting changes. PowerPoint is created only when you approve.</p>
+
+      <div class="review-layout">
+        <div class="review-col">
+          <h3 class="review-subhead">Slide text</h3>
+          <pre class="deck-draft" id="draftView" tabindex="0"></pre>
+        </div>
+        <div class="review-col">
+          <h3 class="review-subhead">Format preview</h3>
+          <p class="field-hint" id="styleNotes" hidden></p>
+          <div class="slide-preview-strip" id="slidePreview" aria-label="PowerPoint-style slide previews"></div>
+        </div>
+      </div>
+
+      <div class="deck-chat" id="chatLog" aria-live="polite"></div>
+
+      <form class="deck-chat-form" id="refineForm">
+        <div class="label-row">
+          <label for="refineMessage">Ask for changes</label>
+          <button type="button" class="btn-mic" id="refineMicBtn" aria-pressed="false" title="Dictate with microphone">
+            <span class="mic-icon" aria-hidden="true"></span>
+            <span class="mic-label">Dictate</span>
+          </button>
+        </div>
+        <textarea id="refineMessage" rows="3" maxlength="4000" placeholder="e.g. Shorten slide 3, darker title bar, larger bullets, use image diagram-1.png on the approach slide…"></textarea>
+        <p class="field-hint" id="refineMicHint" hidden>Listening… click Dictate again to stop.</p>
+        <div class="deck-actions">
+          <button type="submit" class="btn-deck btn-deck--ghost" id="refineBtn">Update draft</button>
+          <button type="button" class="btn-deck" id="generateBtn">Generate PowerPoint</button>
+        </div>
+      </form>
+      <p class="deck-error" id="reviewError" hidden></p>
+    </section>
+
+    <!-- Phase 3: pptx ready / revise -->
+    <section class="deck-ready" id="deckReady" hidden>
+      <h2 class="board-title">PowerPoint ready</h2>
       <pre class="deck-summary" id="jobSummary" hidden></pre>
-      <a class="btn-deck btn-deck--ghost" id="downloadBtn" hidden href="#">Download</a>
+      <div class="deck-actions">
+        <a class="btn-deck" id="downloadBtn" href="#">Download .pptx</a>
+        <button type="button" class="btn-deck btn-deck--ghost" id="reviseBtn">Want changes?</button>
+        <button type="button" class="btn-deck btn-deck--ghost" id="startOverBtn">Start over</button>
+      </div>
+      <p class="deck-ready-note">If you want changes, you’ll return to the review chat. A new PowerPoint is generated only after you approve again.</p>
+      <p class="deck-error" id="readyError" hidden></p>
     </section>
   </main>
 
