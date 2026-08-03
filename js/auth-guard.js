@@ -57,16 +57,33 @@
 
     let status = null;
     try {
-      const result = await window.ArcadeAuth.callMutation(
+      let result = await window.ArcadeAuth.callMutation(
         'access:ensureAndGet',
         {},
       );
       status = result && result.status;
     } catch (err) {
-      console.error('[access]', err);
-      reveal();
-      go(`${loginPath}?next=${encodeURIComponent(here)}`);
-      return false;
+      // First call can fail right after sign-in (stale JWT). Refresh once, then
+      // retry — do not bounce to login while a session may still be valid.
+      console.warn('[access] ensureAndGet failed, refreshing token', err);
+      try {
+        await window.ArcadeAuth.refreshAccessToken();
+        if (!window.ArcadeAuth.isAuthenticated()) {
+          reveal();
+          go(`${loginPath}?next=${encodeURIComponent(here)}`);
+          return false;
+        }
+        const result = await window.ArcadeAuth.callMutation(
+          'access:ensureAndGet',
+          {},
+        );
+        status = result && result.status;
+      } catch (err2) {
+        console.error('[access]', err2);
+        reveal();
+        go(`${loginPath}?next=${encodeURIComponent(here)}`);
+        return false;
+      }
     }
 
     if (status === 'approved') {

@@ -318,10 +318,12 @@ export const applyDecision = internalMutation({
         subject: "My Pragmatict access granted",
         text:
           `Your access to My Pragmatict has been approved.\n\n` +
-          `Sign in here:\n${siteUrl()}/login.html?next=arcade.html\n`,
+          `Open My Pragmatict:\n${siteUrl()}/arcade.html\n` +
+          `(If you are asked to sign in, use the same account.)\n`,
         html:
           `<p>Your access to <strong>My Pragmatict</strong> has been approved.</p>` +
-          `<p><a href="${siteUrl()}/login.html?next=arcade.html">Sign in</a></p>`,
+          `<p><a href="${siteUrl()}/arcade.html">Open My Pragmatict</a></p>` +
+          `<p>If you are asked to sign in, use the same account.</p>`,
       });
       return { ok: true as const, status: "approved" as const, email: row.email };
     }
