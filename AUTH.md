@@ -86,7 +86,18 @@ Also ensure `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM` are set (same as auth emails
 
 **Required before the gate works:** if `ADMIN_EMAIL` is missing, new users become `pending` but no admin email is sent.
 
-## 6. Deploy Convex functions (live backend = duck)
+## 6. M365 Connect (customer SharePoint / OneDrive)
+
+Optional studio to connect a **customer’s** Microsoft 365 via delegated OAuth.
+
+See **[`docs/m365-connect/README.md`](docs/m365-connect/README.md)** for the Entra app registration, redirect URI (`…convex.site/m365/callback`), and:
+
+```bash
+npx convex env set MICROSOFT_CLIENT_ID "..."
+npx convex env set MICROSOFT_CLIENT_SECRET "..."
+```
+
+## 7. Deploy Convex functions (live backend = duck)
 
 The **static site** (`js/convex-config.js`) and Google OAuth callback use the Convex
 **dev** deployment `limitless-duck-213` — that is the live backend for
@@ -108,7 +119,7 @@ Do **not** run `npx convex deploy` expecting to update pragmatict.be — that pu
 unused Convex “production” deployment and will leave the live site on stale functions.
 Leave `brilliant-coyote-416` alone unless you intentionally migrate the site + all env vars.
 
-## 7. Test locally
+## 8. Test locally
 
 ```bash
 npx convex dev
