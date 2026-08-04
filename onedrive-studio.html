@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneDrive — My Pragmatict</title>
+  <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>html,body{background:#ffffff}</style>
+  <link rel="stylesheet" href="home.css?v=3">
+  <link rel="stylesheet" href="deck.css">
+  <link rel="stylesheet" href="onedrive.css?v=1">
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--left"></div>
+    <div class="bg-glow bg-glow--right"></div>
+  </div>
+
+  <main class="home deck-page od-page">
+    <div class="user-bar">
+      <a class="back-public" href="arcade.html">← My Pragmatict</a>
+      <span id="userBar">…</span>
+      <button type="button" class="sign-out" id="signOutBtn">Sign out</button>
+    </div>
+
+    <header class="deck-header">
+      <img class="deck-brand-mark" src="assets/pragmatict-logo.png" alt="PragmatICT">
+      <p class="hero-kicker">My Pragmatict</p>
+      <h1 class="deck-title">OneDrive</h1>
+      <p class="deck-lede">Browse files for customers already connected in M365 Connect.</p>
+    </header>
+
+    <section class="od-toolbar" aria-label="Customer picker">
+      <div class="od-customer-field">
+        <label for="customerSearch">Customer</label>
+        <input id="customerSearch" type="search" autocomplete="off" placeholder="Search connected customers…">
+        <ul class="od-customer-menu" id="customerMenu" hidden></ul>
+      </div>
+      <p class="od-selected" id="selectedLabel">Select a customer to browse their files.</p>
+      <a class="od-m365-link" href="m365-studio.html">Manage connections in M365 Connect →</a>
+    </section>
+
+    <p class="deck-error" id="pageError" hidden></p>
+
+    <section class="od-browser" id="browser" hidden aria-label="File browser">
+      <aside class="od-sidebar">
+        <p class="od-sidebar-title" id="sidebarTitle">Folders</p>
+        <nav class="od-folder-nav" id="folderNav"></nav>
+      </aside>
+
+      <div class="od-main">
+        <div class="od-pathbar">
+          <button type="button" class="od-up" id="upBtn" hidden>↑ Up</button>
+          <ol class="od-crumbs" id="crumbs" aria-label="Path"></ol>
+          <button type="button" class="btn-deck btn-deck--ghost od-refresh" id="refreshBtn">Refresh</button>
+        </div>
+
+        <div class="od-table-wrap">
+          <table class="od-table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Type</th>
+                <th scope="col">Size</th>
+              </tr>
+            </thead>
+            <tbody id="fileBody">
+              <tr><td colspan="4" class="od-empty">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/convex-config.js"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/auth-guard.js?v=4"></script>
+  <script src="js/onedrive-studio.js?v=1"></script>
+</body>
+</html>
