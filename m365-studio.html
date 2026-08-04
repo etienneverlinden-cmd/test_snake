@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M365 Connect — My Pragmatict</title>
+  <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>html,body{background:#ffffff}</style>
+  <link rel="stylesheet" href="home.css?v=3">
+  <link rel="stylesheet" href="deck.css">
+  <link rel="stylesheet" href="m365.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--left"></div>
+    <div class="bg-glow bg-glow--right"></div>
+  </div>
+
+  <main class="home deck-page m365-page">
+    <div class="user-bar">
+      <a class="back-public" href="arcade.html">← My Pragmatict</a>
+      <span id="userBar">…</span>
+      <button type="button" class="sign-out" id="signOutBtn">Sign out</button>
+    </div>
+
+    <header class="deck-header">
+      <img class="deck-brand-mark" src="assets/pragmatict-logo.png" alt="PragmatICT">
+      <p class="hero-kicker">My Pragmatict</p>
+      <h1 class="deck-title">M365 Connect</h1>
+      <p class="deck-lede">Connect a customer’s Microsoft 365. Their admin or owner signs in at Microsoft, then you pick a SharePoint site or OneDrive folder to work in.</p>
+    </header>
+
+    <p class="deck-error" id="pageError" hidden></p>
+    <p class="m365-banner m365-banner--ok" id="pageOk" hidden></p>
+
+    <section class="deck-form m365-connect-form" id="connectFormSection">
+      <div class="field field--full">
+        <label for="customerLabel">Customer label</label>
+        <input id="customerLabel" type="text" maxlength="120" required placeholder="e.g. Contoso — Project Phoenix">
+        <p class="field-hint">Shown only in My Pragmatict. The customer signs in on the next screen.</p>
+      </div>
+      <div class="deck-actions field--full">
+        <button type="button" class="btn-deck" id="connectBtn">Connect Microsoft 365</button>
+      </div>
+      <p class="field-hint field--full">You will leave this site for Microsoft login and consent. After Accept, you return here to choose a location.</p>
+    </section>
+
+    <section class="m365-list" aria-label="Connections">
+      <h2 class="board-title">Connections</h2>
+      <p class="m365-empty" id="emptyList">No connections yet.</p>
+      <ul class="m365-cards" id="connectionList"></ul>
+    </section>
+
+    <section class="m365-detail deck-form" id="detailPanel" hidden>
+      <div class="m365-detail-head field--full">
+        <h2 class="board-title" id="detailTitle">Connection</h2>
+        <button type="button" class="btn-deck btn-deck--ghost" id="closeDetailBtn">Close</button>
+      </div>
+      <div class="field field--full">
+        <p class="m365-meta" id="detailMeta"></p>
+      </div>
+
+      <div class="field field--full m365-actions-row">
+        <button type="button" class="btn-deck btn-deck--ghost" id="testBtn">Test access</button>
+        <button type="button" class="btn-deck btn-deck--ghost" id="pickSharePointBtn">Pick SharePoint site</button>
+        <button type="button" class="btn-deck btn-deck--ghost" id="pickOneDriveBtn">Use their OneDrive</button>
+        <button type="button" class="btn-deck btn-deck--ghost" id="clearLocationBtn">Clear location</button>
+        <button type="button" class="btn-deck btn-deck--danger" id="disconnectBtn">Disconnect</button>
+      </div>
+      <p class="deck-error" id="detailError" hidden></p>
+      <p class="m365-banner m365-banner--ok" id="detailOk" hidden></p>
+
+      <div class="field field--full" id="siteSearchBlock" hidden>
+        <label for="siteQuery">Search SharePoint sites</label>
+        <div class="m365-inline">
+          <input id="siteQuery" type="text" maxlength="120" placeholder="Site name or keyword">
+          <button type="button" class="btn-deck" id="siteSearchBtn">Search</button>
+        </div>
+        <ul class="m365-results" id="siteResults"></ul>
+      </div>
+
+      <div class="field field--full" id="folderBlock" hidden>
+        <div class="label-row">
+          <label>Browse folders</label>
+          <button type="button" class="btn-deck btn-deck--ghost" id="folderUpBtn" hidden>Up</button>
+        </div>
+        <p class="field-hint" id="folderPathHint"></p>
+        <ul class="m365-results" id="folderResults"></ul>
+        <div class="deck-actions">
+          <button type="button" class="btn-deck" id="selectHereBtn">Use this folder</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/convex-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/auth-guard.js?v=4"></script>
+  <script src="js/m365-studio.js"></script>
+</body>
+</html>

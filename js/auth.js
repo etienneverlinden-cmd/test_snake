@@ -280,6 +280,7 @@
     onAuthChange,
     callQuery,
     callMutation,
+    callAction,
     refreshAccessToken,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

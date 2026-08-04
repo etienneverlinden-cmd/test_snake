@@ -34,4 +34,44 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_token", ["decisionToken"])
     .index("by_email", ["email"]),
+
+  /**
+   * Customer Microsoft 365 connections (delegated OAuth).
+   * Tokens let approved members access SharePoint/OneDrive the consenter can see.
+   */
+  m365Connections: defineTable({
+    createdByUserId: v.id("users"),
+    label: v.string(),
+    status: v.union(
+      v.literal("pending_oauth"),
+      v.literal("connected"),
+      v.literal("error"),
+      v.literal("disconnected"),
+    ),
+    oauthState: v.optional(v.string()),
+    tenantId: v.optional(v.string()),
+    tenantName: v.optional(v.string()),
+    accountEmail: v.optional(v.string()),
+    accountName: v.optional(v.string()),
+    refreshToken: v.optional(v.string()),
+    accessToken: v.optional(v.string()),
+    accessTokenExpiresAt: v.optional(v.number()),
+    scope: v.optional(v.string()),
+    lastError: v.optional(v.string()),
+    locationKind: v.optional(
+      v.union(v.literal("sharepoint"), v.literal("onedrive")),
+    ),
+    siteId: v.optional(v.string()),
+    siteName: v.optional(v.string()),
+    siteWebUrl: v.optional(v.string()),
+    driveId: v.optional(v.string()),
+    itemId: v.optional(v.string()),
+    itemName: v.optional(v.string()),
+    itemWebUrl: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_created_by", ["createdByUserId"])
+    .index("by_oauth_state", ["oauthState"])
+    .index("by_status", ["status"]),
 });

@@ -1,0 +1,177 @@
+.m365-page .m365-connect-form {
+  margin-bottom: 0.5rem;
+}
+
+.m365-banner {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.m365-banner--ok {
+  background: rgba(34, 120, 90, 0.08);
+  border: 1px solid rgba(34, 120, 90, 0.28);
+  color: #1a5c45;
+}
+
+.m365-list {
+  animation: riseIn 0.55s ease both;
+}
+
+.m365-empty {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.m365-cards {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.m365-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  padding: 1rem 1.15rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+}
+
+.m365-card:hover,
+.m365-card:focus-visible {
+  border-color: rgba(190, 22, 34, 0.4);
+  outline: none;
+}
+
+.m365-card.is-active {
+  border-color: rgba(190, 22, 34, 0.55);
+  box-shadow: 0 8px 24px rgba(190, 22, 34, 0.08);
+}
+
+.m365-card-name {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.m365-card-sub {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.m365-status {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.m365-status.is-connected {
+  color: #1a5c45;
+}
+
+.m365-status.is-error,
+.m365-status.is-pending_oauth {
+  color: var(--mint);
+}
+
+.m365-detail {
+  margin-top: 0.5rem;
+}
+
+.m365-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.m365-detail-head .board-title {
+  margin: 0;
+}
+
+.m365-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.m365-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.m365-inline {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.m365-inline input {
+  flex: 1 1 12rem;
+}
+
+.m365-results {
+  list-style: none;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 16rem;
+  overflow: auto;
+}
+
+.m365-results li button {
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+}
+
+.m365-results li button:hover,
+.m365-results li button:focus-visible {
+  border-color: rgba(190, 22, 34, 0.4);
+  outline: none;
+}
+
+.m365-results .is-folder {
+  font-weight: 600;
+}
+
+.btn-deck--danger {
+  color: #fff;
+  background: #be1622;
+  border-color: #be1622;
+}
+
+.btn-deck--danger:hover {
+  filter: brightness(0.95);
+}
