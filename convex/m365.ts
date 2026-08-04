@@ -649,14 +649,51 @@ export const listChildren = action({
     const token = await getValidAccessToken(ctx, args.connectionId);
     const data = await graphGet(
       token,
-      `/drives/${args.driveId}/items/${args.itemId}/children?$select=id,name,webUrl,folder,file&$top=50`,
+      `/drives/${args.driveId}/items/${args.itemId}/children?$select=id,name,webUrl,folder,file,size,lastModifiedDateTime,createdDateTime&$top=200&$orderby=name`,
     );
-    return (data.value || []).map((item: any) => ({
-      id: item.id as string,
-      name: item.name as string,
-      webUrl: (item.webUrl || "") as string,
-      isFolder: !!item.folder,
-    }));
+    return (data.value || []).map((item: any) => {
+      const isFolder = !!item.folder;
+      const mime = (item.file && item.file.mimeType) || "";
+      let typeLabel = isFolder ? "Folder" : "File";
+      if (!isFolder && item.name) {
+        const dot = String(item.name).lastIndexOf(".");
+        if (dot > 0) typeLabel = String(item.name).slice(dot + 1).toUpperCase();
+      }
+      return {
+        id: item.id as string,
+        name: item.name as string,
+        webUrl: (item.webUrl || "") as string,
+        isFolder,
+        size: typeof item.size === "number" ? (item.size as number) : null,
+        lastModifiedDateTime: (item.lastModifiedDateTime ||
+          item.createdDateTime ||
+          null) as string | null,
+        mimeType: mime as string,
+        typeLabel,
+      };
+    });
+  },
+});
+
+/** Connected customers that already have a selected SharePoint/OneDrive folder. */
+export const listBrowsableConnections = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return [];
+    const access = await ctx.db
+      .query("memberAccess")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    if (!access || access.status !== "approved") return [];
+
+    const rows = await ctx.db.query("m365Connections").order("desc").take(100);
+    return rows
+      .filter(
+        (r) =>
+          r.status === "connected" && !!(r.driveId && r.itemId),
+      )
+      .map(publicConnection);
   },
 });
 
