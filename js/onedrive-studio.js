@@ -309,9 +309,24 @@
   }
 
   async function refreshConnections() {
-    connections =
-      (await window.ArcadeAuth.callQuery('m365:listBrowsableConnections', {})) ||
-      [];
+    // Prefer dedicated query if deployed; fall back to listConnections for older duck builds.
+    let rows = null;
+    try {
+      rows = await window.ArcadeAuth.callQuery(
+        'm365:listBrowsableConnections',
+        {},
+      );
+    } catch {
+      rows = null;
+    }
+    if (!Array.isArray(rows)) {
+      const all =
+        (await window.ArcadeAuth.callQuery('m365:listConnections', {})) || [];
+      rows = all.filter(
+        (c) => c && c.status === 'connected' && c.hasLocation && c.driveId && c.itemId,
+      );
+    }
+    connections = rows;
     if (!connections.length) {
       selectedLabel.textContent =
         'No customers ready yet. Connect one in M365 Connect and pick a folder.';
