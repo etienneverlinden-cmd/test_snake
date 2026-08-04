@@ -649,7 +649,7 @@ export const listChildren = action({
     const token = await getValidAccessToken(ctx, args.connectionId);
     const data = await graphGet(
       token,
-      `/drives/${args.driveId}/items/${args.itemId}/children?$select=id,name,webUrl,folder,file,size,lastModifiedDateTime,createdDateTime&$top=200&$orderby=name`,
+      `/drives/${args.driveId}/items/${args.itemId}/children?$select=id,name,webUrl,folder,file,size,lastModifiedDateTime,createdDateTime&$top=200`,
     );
     return (data.value || []).map((item: any) => {
       const isFolder = !!item.folder;
