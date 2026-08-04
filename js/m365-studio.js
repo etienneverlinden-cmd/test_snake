@@ -175,11 +175,15 @@
     folderUpBtn.hidden = browse.stack.length <= 1;
     folderResults.innerHTML = '';
     try {
-      const children = await window.ArcadeAuth.callAction('m365:listChildren', {
-        connectionId: active.id,
-        driveId: browse.driveId,
-        itemId: browse.itemId,
-      });
+      const children = await window.ArcadeAuth.callAction(
+        'm365:listChildren',
+        {
+          connectionId: active.id,
+          driveId: browse.driveId,
+          itemId: browse.itemId,
+        },
+        true,
+      );
       for (const child of children || []) {
         const li = document.createElement('li');
         const btn = document.createElement('button');
@@ -243,9 +247,13 @@
     show(detailOk, '');
     testBtn.disabled = true;
     try {
-      const result = await window.ArcadeAuth.callAction('m365:testAccess', {
-        connectionId: active.id,
-      });
+      const result = await window.ArcadeAuth.callAction(
+        'm365:testAccess',
+        {
+          connectionId: active.id,
+        },
+        true,
+      );
       show(
         detailOk,
         result.webUrl
@@ -278,10 +286,14 @@
     siteSearchBtn.disabled = true;
     siteResults.innerHTML = '';
     try {
-      const sites = await window.ArcadeAuth.callAction('m365:searchSites', {
-        connectionId: active.id,
-        query: (siteQuery.value || '').trim() || '*',
-      });
+      const sites = await window.ArcadeAuth.callAction(
+        'm365:searchSites',
+        {
+          connectionId: active.id,
+          query: (siteQuery.value || '').trim() || '*',
+        },
+        true,
+      );
       if (!sites || sites.length === 0) {
         const li = document.createElement('li');
         li.innerHTML =
@@ -302,6 +314,7 @@
                 connectionId: active.id,
                 siteId: site.id,
               },
+              true,
             );
             await startBrowse('sharepoint', {
               siteId: site.id,
@@ -334,9 +347,13 @@
     show(detailError, '');
     pickOneDriveBtn.disabled = true;
     try {
-      const root = await window.ArcadeAuth.callAction('m365:getMyDriveRoot', {
-        connectionId: active.id,
-      });
+      const root = await window.ArcadeAuth.callAction(
+        'm365:getMyDriveRoot',
+        {
+          connectionId: active.id,
+        },
+        true,
+      );
       siteSearchBlock.hidden = true;
       await startBrowse('onedrive', {
         driveId: root.driveId,
