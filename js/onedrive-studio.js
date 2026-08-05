@@ -13,6 +13,7 @@
   const pageError = document.getElementById('pageError');
   const customerSearch = document.getElementById('customerSearch');
   const customerMenu = document.getElementById('customerMenu');
+  const customerPickList = document.getElementById('customerPickList');
   const selectedLabel = document.getElementById('selectedLabel');
   const browser = document.getElementById('browser');
   const folderNav = document.getElementById('folderNav');
@@ -103,6 +104,27 @@
         return hay.includes(needle);
       })
       .slice(0, 30);
+  }
+
+  function renderPickList() {
+    if (!customerPickList) return;
+    customerPickList.innerHTML = '';
+    if (!connections.length) return;
+
+    for (const c of connections) {
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.innerHTML = `<span></span><span class="od-menu-sub"></span>`;
+      btn.querySelector('span').textContent = c.label;
+      btn.querySelector('.od-menu-sub').textContent =
+        connectionSub(c) || 'Connected';
+      btn.addEventListener('click', async () => {
+        await selectCustomer(c);
+      });
+      li.appendChild(btn);
+      customerPickList.appendChild(li);
+    }
   }
 
   function renderMenu() {
@@ -343,19 +365,40 @@
   }
 
   async function refreshConnections() {
-    const all =
-      (await window.ArcadeAuth.callQuery('m365:listConnections', {})) || [];
-    connections = all.filter((c) => c && c.status === 'connected');
+    showError('');
+    selectedLabel.textContent = 'Loading customers…';
+
+    if (!window.ArcadeAuth.getToken() && window.ArcadeAuth.refreshAccessToken) {
+      await window.ArcadeAuth.refreshAccessToken();
+    }
+
+    let all = await window.ArcadeAuth.callQuery('m365:listConnections', {});
+    if (all === null && window.ArcadeAuth.refreshAccessToken) {
+      await window.ArcadeAuth.refreshAccessToken();
+      all = await window.ArcadeAuth.callQuery('m365:listConnections', {});
+    }
+    if (all === null) {
+      connections = [];
+      selectedLabel.textContent = 'Could not load customers (session error). Sign out and sign in again.';
+      showError('Could not load M365 connections from Convex. Try signing out and back in.');
+      renderPickList();
+      return;
+    }
+
+    connections = (all || []).filter((c) => c && c.status === 'connected');
+    renderPickList();
+
     if (!connections.length) {
       selectedLabel.textContent =
         'No connected customers yet. Connect one in M365 Connect first.';
       return;
     }
+
     const withFolder = connections.filter((c) => c.hasLocation).length;
     if (withFolder === 0) {
-      selectedLabel.textContent = `${connections.length} connected — select one below (opens OneDrive root until you save a folder in M365 Connect).`;
+      selectedLabel.textContent = `${connections.length} connected — click a customer below to browse their OneDrive.`;
     } else {
-      selectedLabel.textContent = 'Select a customer to browse their files.';
+      selectedLabel.textContent = `${connections.length} connected — click a customer below.`;
     }
   }
 
@@ -390,5 +433,7 @@
   await refreshConnections();
   if (connections.length === 1) {
     await selectCustomer(connections[0]);
+  } else if (connections.length > 1) {
+    browser.hidden = true;
   }
 })();
