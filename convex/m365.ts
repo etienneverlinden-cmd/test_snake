@@ -51,6 +51,20 @@ function newState() {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+function buildConnectionLabel(profile: {
+  tenantName?: string;
+  accountName?: string;
+  accountEmail?: string;
+}) {
+  const tenant = profile.tenantName?.trim();
+  if (tenant) return tenant.slice(0, 120);
+  const name = profile.accountName?.trim();
+  if (name) return name.slice(0, 120);
+  const email = profile.accountEmail?.trim();
+  if (email) return email.slice(0, 120);
+  return "Connected customer";
+}
+
 function publicConnection(doc: {
   _id: Id<"m365Connections">;
   label: string;
@@ -152,13 +166,9 @@ export const getConnection = query({
 
 /** Start delegated OAuth — customer admin/owner will sign in at Microsoft. */
 export const startConnect = mutation({
-  args: {
-    label: v.string(),
-  },
-  handler: async (ctx, args) => {
+  args: {},
+  handler: async (ctx) => {
     const { userId } = await requireApproved(ctx);
-    const label = args.label.trim().slice(0, 120);
-    if (label.length < 2) throw new Error("Customer label is required");
 
     const clientId = msClientId();
     if (!clientId) {
@@ -176,7 +186,7 @@ export const startConnect = mutation({
     const now = Date.now();
     const connectionId = await ctx.db.insert("m365Connections", {
       createdByUserId: userId,
-      label,
+      label: "Connecting…",
       status: "pending_oauth",
       oauthState,
       createdAt: now,
@@ -290,6 +300,41 @@ export const internalGet = internalQuery({
   },
 });
 
+/** Existing live connection for the same Microsoft tenant (avoid duplicates). */
+export const internalFindConnectedByTenant = internalQuery({
+  args: {
+    tenantId: v.string(),
+    excludeId: v.optional(v.id("m365Connections")),
+  },
+  handler: async (ctx, args) => {
+    const matches = await ctx.db
+      .query("m365Connections")
+      .withIndex("by_tenant", (q) => q.eq("tenantId", args.tenantId))
+      .collect();
+    return (
+      matches.find(
+        (row) =>
+          row.status === "connected" &&
+          row._id !== args.excludeId,
+      ) ?? null
+    );
+  },
+});
+
+export const internalAbsorbPending = internalMutation({
+  args: { pendingId: v.id("m365Connections") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.pendingId, {
+      status: "disconnected",
+      oauthState: undefined,
+      refreshToken: undefined,
+      accessToken: undefined,
+      accessTokenExpiresAt: undefined,
+      updatedAt: Date.now(),
+    });
+  },
+});
+
 export const internalMemberAccess = internalQuery({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
@@ -311,6 +356,7 @@ export const internalSaveTokens = internalMutation({
     tenantName: v.optional(v.string()),
     accountEmail: v.optional(v.string()),
     accountName: v.optional(v.string()),
+    label: v.optional(v.string()),
     status: v.union(
       v.literal("connected"),
       v.literal("error"),
@@ -332,6 +378,7 @@ export const internalSaveTokens = internalMutation({
     if (args.tenantName !== undefined) patch.tenantName = args.tenantName;
     if (args.accountEmail !== undefined) patch.accountEmail = args.accountEmail;
     if (args.accountName !== undefined) patch.accountName = args.accountName;
+    if (args.label !== undefined) patch.label = args.label;
     if (args.lastError !== undefined) patch.lastError = args.lastError;
     else if (args.status === "connected") patch.lastError = undefined;
     if (args.clearOauthState) patch.oauthState = undefined;
@@ -494,8 +541,24 @@ export const oauthCallback = httpAction(async (ctx, request) => {
     }
     const tokens = await exchangeCode(code);
     const profile = await loadProfile(tokens.access_token);
+    const label = buildConnectionLabel(profile);
+
+    let targetId = connection._id;
+    if (profile.tenantId) {
+      const existing = await ctx.runQuery(
+        internal.m365.internalFindConnectedByTenant,
+        { tenantId: profile.tenantId, excludeId: connection._id },
+      );
+      if (existing) {
+        targetId = existing._id;
+        await ctx.runMutation(internal.m365.internalAbsorbPending, {
+          pendingId: connection._id,
+        });
+      }
+    }
+
     await ctx.runMutation(internal.m365.internalSaveTokens, {
-      connectionId: connection._id,
+      connectionId: targetId,
       refreshToken: tokens.refresh_token,
       accessToken: tokens.access_token,
       accessTokenExpiresAt: Date.now() + (tokens.expires_in - 60) * 1000,
@@ -504,11 +567,12 @@ export const oauthCallback = httpAction(async (ctx, request) => {
       tenantName: profile.tenantName,
       accountEmail: profile.accountEmail,
       accountName: profile.accountName,
+      label,
       status: "connected",
       clearOauthState: true,
     });
     const dest = new URL(studio);
-    dest.searchParams.set("connected", connection._id);
+    dest.searchParams.set("connected", targetId);
     return Response.redirect(dest.toString(), 302);
   } catch (e) {
     const message = e instanceof Error ? e.message : "OAuth failed";

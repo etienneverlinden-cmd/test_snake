@@ -38,15 +38,10 @@
     <p class="m365-banner m365-banner--ok" id="pageOk" hidden></p>
 
     <section class="deck-form m365-connect-form" id="connectFormSection">
-      <div class="field field--full">
-        <label for="customerLabel">Customer label</label>
-        <input id="customerLabel" type="text" maxlength="120" required placeholder="e.g. Contoso — Project Phoenix">
-        <p class="field-hint">Shown only in My Pragmatict. The customer signs in on the next screen.</p>
-      </div>
       <div class="deck-actions field--full">
         <button type="button" class="btn-deck" id="connectBtn">Connect Microsoft 365</button>
       </div>
-      <p class="field-hint field--full">You will leave this site for Microsoft login and consent. After Accept, you return here to choose a location.</p>
+      <p class="field-hint field--full">The customer signs in at Microsoft on the next screen. Their company name is saved automatically as the connection name.</p>
     </section>
 
     <section class="m365-list" aria-label="Connections">
@@ -100,6 +95,6 @@
   <script src="js/convex-config.js"></script>
   <script src="js/auth.js?v=5"></script>
   <script src="js/auth-guard.js?v=4"></script>
-  <script src="js/m365-studio.js?v=2"></script>
+  <script src="js/m365-studio.js?v=3"></script>
 </body>
 </html>
