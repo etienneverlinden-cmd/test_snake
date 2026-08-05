@@ -146,7 +146,7 @@
     active = connections.find((c) => c.id === id) || null;
     if (!active) return;
     detailPanel.hidden = false;
-    detailTitle.textContent = active.label;
+    detailTitle.textContent = displayName(active);
     detailMeta.textContent = formatMeta(active);
     siteSearchBlock.hidden = true;
     folderBlock.hidden = true;
