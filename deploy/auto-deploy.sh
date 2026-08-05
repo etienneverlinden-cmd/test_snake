@@ -46,6 +46,13 @@ rsync -a --delete \
 	--exclude '.env.example' \
 	--exclude 'CONVEX.md' \
 	--exclude 'README.md' \
+	--exclude 'test/convex/' \
+	--exclude 'test/node_modules/' \
+	--exclude 'test/package.json' \
+	--exclude 'test/package-lock.json' \
+	--exclude 'test/tsconfig.json' \
+	--exclude 'test/.env' \
+	--exclude 'test/README.md' \
 	"$REPO_DIR/" "$WEB_DIR/"
 
 chown -R root:root "$WEB_DIR"

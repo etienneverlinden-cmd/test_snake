@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace praticien — Loïc Verlinden</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/loic.css">
+</head>
+<body class="page-shell">
+  <header class="topbar">
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;width:min(1120px,calc(100% - 2.5rem));margin-inline:auto;">
+      <a class="brand" href="index.html">Loïc <span>Verlinden</span></a>
+      <nav class="nav" aria-label="Principale" style="display:flex">
+        <a href="index.html">Site public</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <div class="wrap">
+      <div class="page-hero">
+        <p class="eyebrow">Praticien</p>
+        <h1>Agenda</h1>
+      </div>
+
+      <div id="errorMsg" class="msg msg-error hidden"></div>
+      <div id="okMsg" class="msg msg-ok hidden"></div>
+
+      <section class="panel login-box" id="loginPanel">
+        <h2>Connexion</h2>
+        <form id="loginForm">
+          <div class="field">
+            <label for="password">Mot de passe</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password">
+          </div>
+          <p style="margin-top:1rem">
+            <button type="submit" class="btn btn-solid" id="loginBtn">Se connecter</button>
+          </p>
+        </form>
+      </section>
+
+      <div id="adminApp" class="hidden">
+        <div class="admin-toolbar">
+          <div class="week-nav" style="margin:0">
+            <button type="button" class="btn btn-outline btn-sm" id="prevWeek">←</button>
+            <strong id="weekLabel">—</strong>
+            <button type="button" class="btn btn-outline btn-sm" id="nextWeek">→</button>
+          </div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button type="button" class="btn btn-outline btn-sm" id="seedBtn">Initialiser horaires / types</button>
+            <button type="button" class="btn btn-outline btn-sm" id="logoutBtn">Déconnexion</button>
+          </div>
+        </div>
+
+        <section class="panel">
+          <h2>Google Calendar</h2>
+          <p style="color:var(--ink-soft);font-size:0.95rem;margin-top:0">
+            Connectez l’agenda Google utilisé pour synchroniser automatiquement chaque rendez-vous.
+          </p>
+          <div id="googleStatus" class="msg msg-info" style="margin-top:0.8rem">Chargement…</div>
+          <form id="googleForm" class="form-grid" style="margin-top:0.8rem">
+            <div class="field field-full">
+              <label for="googleEmail">Adresse Gmail / Google</label>
+              <input id="googleEmail" type="email" required placeholder="loic@gmail.com" autocomplete="email">
+            </div>
+            <div class="field field-full" style="display:flex;flex-wrap:wrap;gap:0.5rem">
+              <button type="submit" class="btn btn-solid btn-sm" id="googleConnectBtn">Connecter Google Calendar</button>
+              <button type="button" class="btn btn-outline btn-sm hidden" id="googleDisconnectBtn">Déconnecter</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>Rendez-vous de la semaine</h2>
+          <ul class="appt-list" id="apptList">
+            <li class="slot-empty">Chargement…</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>Horaires d’ouverture</h2>
+          <p style="color:var(--ink-soft);font-size:0.95rem">Un créneau matin + après-midi par jour. Laissez vide pour fermer le jour.</p>
+          <div class="hours-grid" id="hoursGrid"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Bloquer une plage</h2>
+          <form id="blockForm" class="form-grid">
+            <div class="field">
+              <label for="blockStart">Début</label>
+              <input id="blockStart" type="datetime-local" required>
+            </div>
+            <div class="field">
+              <label for="blockEnd">Fin</label>
+              <input id="blockEnd" type="datetime-local" required>
+            </div>
+            <div class="field field-full">
+              <label for="blockReason">Motif (optionnel)</label>
+              <input id="blockReason" type="text" placeholder="Congé, formation…">
+            </div>
+            <div class="field field-full">
+              <button type="submit" class="btn btn-solid btn-sm">Bloquer</button>
+            </div>
+          </form>
+          <ul class="appt-list" id="blockedList" style="margin-top:1rem"></ul>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/convex-config.js"></script>
+  <script src="js/convex-client.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

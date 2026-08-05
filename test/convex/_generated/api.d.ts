@@ -8,15 +8,17 @@
  * @module
  */
 
-import type * as ResendOTP from "../ResendOTP.js";
-import type * as access from "../access.js";
-import type * as auth from "../auth.js";
+import type * as admin from "../admin.js";
+import type * as appointments from "../appointments.js";
+import type * as appointmentsInternal from "../appointmentsInternal.js";
+import type * as availability from "../availability.js";
+import type * as crons from "../crons.js";
 import type * as email from "../email.js";
-import type * as googleConnect from "../googleConnect.js";
+import type * as google from "../google.js";
 import type * as http from "../http.js";
-import type * as m365 from "../m365.js";
-import type * as scores from "../scores.js";
-import type * as users from "../users.js";
+import type * as lib from "../lib.js";
+import type * as notifications from "../notifications.js";
+import type * as seed from "../seed.js";
 
 import type {
   ApiFromModules,
@@ -25,15 +27,17 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  ResendOTP: typeof ResendOTP;
-  access: typeof access;
-  auth: typeof auth;
+  admin: typeof admin;
+  appointments: typeof appointments;
+  appointmentsInternal: typeof appointmentsInternal;
+  availability: typeof availability;
+  crons: typeof crons;
   email: typeof email;
-  googleConnect: typeof googleConnect;
+  google: typeof google;
   http: typeof http;
-  m365: typeof m365;
-  scores: typeof scores;
-  users: typeof users;
+  lib: typeof lib;
+  notifications: typeof notifications;
+  seed: typeof seed;
 }>;
 
 /**

@@ -75,4 +75,36 @@ export default defineSchema({
     .index("by_oauth_state", ["oauthState"])
     .index("by_status", ["status"])
     .index("by_tenant", ["tenantId"]),
+
+  /**
+   * Customer Google Calendar connections (delegated OAuth).
+   * Tokens let approved members use the consenter’s Google Calendar.
+   */
+  googleConnections: defineTable({
+    createdByUserId: v.id("users"),
+    label: v.string(),
+    status: v.union(
+      v.literal("pending_oauth"),
+      v.literal("connected"),
+      v.literal("error"),
+      v.literal("disconnected"),
+    ),
+    oauthState: v.optional(v.string()),
+    accountEmail: v.optional(v.string()),
+    accountName: v.optional(v.string()),
+    refreshToken: v.optional(v.string()),
+    accessToken: v.optional(v.string()),
+    accessTokenExpiresAt: v.optional(v.number()),
+    scope: v.optional(v.string()),
+    lastError: v.optional(v.string()),
+    /** Google calendar id (usually "primary" or an email). */
+    calendarId: v.optional(v.string()),
+    calendarSummary: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_created_by", ["createdByUserId"])
+    .index("by_oauth_state", ["oauthState"])
+    .index("by_status", ["status"])
+    .index("by_email", ["accountEmail"]),
 });

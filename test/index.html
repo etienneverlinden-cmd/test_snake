@@ -1,11 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test</title>
+  <title>Loïc Verlinden — Kinésithérapeute</title>
+  <meta name="description" content="Kinésithérapie générale et sportive à Wavre. Master en sciences du sport. Prise de rendez-vous en ligne.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/loic.css">
 </head>
 <body>
-  hello
+  <header class="topbar">
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;width:min(1120px,calc(100% - 2.5rem));margin-inline:auto;">
+      <a class="brand" href="index.html">Loïc <span>Verlinden</span></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" id="navToggle">☰</button>
+      <nav class="nav" id="nav" aria-label="Principale">
+        <a href="#services">Services</a>
+        <a href="#apropos">À propos</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="rdv.html">Prendre RDV</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-brand">Loïc Verlinden</p>
+      <h1 class="hero-title">Kinésithérapeute — Master en sciences du sport</h1>
+      <p class="hero-sub">
+        Rééducation personnalisée, kinésithérapie sportive et prévention des blessures —
+        dans un cadre clair, moderne et humain.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="rdv.html">Prendre rendez-vous en ligne</a>
+        <a class="btn btn-ghost" href="#services">Découvrir les soins</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Services</p>
+        <h2>Tout ce dont vous avez besoin</h2>
+        <p>Des soins adaptés à votre objectif : récupérer, performer, ou simplement bouger sans douleur.</p>
+      </div>
+      <div class="services">
+        <article class="service">
+          <h3>Kinésithérapie générale</h3>
+          <p>Rééducation personnalisée, gestion de la douleur et retour progressif aux activités du quotidien.</p>
+        </article>
+        <article class="service">
+          <h3>Kinésithérapie sportive</h3>
+          <p>Traumatologie du sport, reprise d’entraînement encadrée et optimisation du mouvement.</p>
+        </article>
+        <article class="service">
+          <h3>Prévention &amp; performance</h3>
+          <p>Évaluation, renforcement ciblé et conseils pour limiter les récidives — adossés au master en sport.</p>
+        </article>
+        <article class="service">
+          <h3>Bilan initial</h3>
+          <p>Première séance approfondie pour comprendre votre historique et construire un plan de soins clair.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="apropos">
+    <div class="wrap about-grid">
+      <div>
+        <p class="eyebrow">À propos</p>
+        <h2>Bouger mieux, vivre mieux.</h2>
+        <p>
+          Loïc Verlinden est kinésithérapeute, titulaire d’un master en sciences du sport.
+          L’approche combine expertise clinique et compréhension de la charge d’entraînement —
+          pour les sportifs comme pour les non-sportifs.
+        </p>
+        <p>
+          Chaque parcours est individualisé : écoute, objectifs concrets, et progression mesurable.
+        </p>
+        <a class="btn btn-solid" href="rdv.html">Réserver une séance</a>
+      </div>
+      <div class="about-panel" aria-hidden="true">
+        <strong>Kiné + sport</strong>
+        <p style="margin:0;opacity:0.9">Master en sciences du sport — pour soigner le mouvement, pas seulement le symptôme.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Besoin d’un rendez-vous&nbsp;?</h2>
+      <p>Choisissez un créneau en ligne en quelques secondes — 24h/24.</p>
+      <a class="btn btn-primary" href="rdv.html">Prendre RDV en ligne</a>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Contact</p>
+        <h2>Le cabinet</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-block">
+          <h3>Adresse</h3>
+          <p>Rue des Lilas 12<br>1300 Wavre</p>
+          <p><a href="https://maps.google.com/?q=Rue+des+Lilas+12,+1300+Wavre" target="_blank" rel="noopener">Itinéraire</a></p>
+        </div>
+        <div class="contact-block">
+          <h3>Coordonnées</h3>
+          <p>Tél. <a href="tel:+3210000000">+32 10 00 00 00</a></p>
+          <p>Email <a href="mailto:contact@loic-verlinden.be">contact@loic-verlinden.be</a></p>
+          <p style="font-size:0.9rem;opacity:0.75">Adresse et numéro fictifs — à remplacer avant la mise en production.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="y"></span> Loïc Verlinden — Kinésithérapeute</span>
+      <span><a href="rdv.html">Rendez-vous</a> · <a href="admin.html">Espace praticien</a></span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const toggle = document.getElementById('navToggle');
+    const nav = document.getElementById('nav');
+    toggle.addEventListener('click', () => nav.classList.toggle('is-open'));
+    const topbar = document.querySelector('.topbar');
+    const onScroll = () => topbar.classList.toggle('is-stuck', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  </script>
 </body>
 </html>

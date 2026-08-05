@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Connect — My Pragmatict</title>
+  <link rel="icon" href="assets/pragmatict-icon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>html,body{background:#ffffff}</style>
+  <link rel="stylesheet" href="home.css?v=3">
+  <link rel="stylesheet" href="deck.css">
+  <link rel="stylesheet" href="m365.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--left"></div>
+    <div class="bg-glow bg-glow--right"></div>
+  </div>
+
+  <main class="home deck-page m365-page">
+    <div class="user-bar">
+      <a class="back-public" href="arcade.html">← My Pragmatict</a>
+      <span id="userBar">…</span>
+      <button type="button" class="sign-out" id="signOutBtn">Sign out</button>
+    </div>
+
+    <header class="deck-header">
+      <img class="deck-brand-mark" src="assets/pragmatict-logo.png" alt="PragmatICT">
+      <p class="hero-kicker">My Pragmatict</p>
+      <h1 class="deck-title">Google Connect</h1>
+      <p class="deck-lede">Connect a customer’s Google Calendar. They sign in at Google and grant calendar access — you never type their password.</p>
+    </header>
+
+    <p class="deck-error" id="pageError" hidden></p>
+    <p class="m365-banner m365-banner--ok" id="pageOk" hidden></p>
+
+    <section class="deck-form m365-connect-form" id="connectFormSection">
+      <div class="deck-actions field--full">
+        <button type="button" class="btn-deck" id="connectBtn">Connect Google Calendar</button>
+      </div>
+      <p class="field-hint field--full">The customer signs in with their Google account on the next screen. Their name/email is saved as the connection label.</p>
+    </section>
+
+    <section class="m365-list" aria-label="Connections">
+      <h2 class="board-title">Connections</h2>
+      <p class="m365-empty" id="emptyList">No connections yet.</p>
+      <ul class="m365-cards" id="connectionList"></ul>
+    </section>
+
+    <section class="m365-detail deck-form" id="detailPanel" hidden>
+      <div class="m365-detail-head field--full">
+        <h2 class="board-title" id="detailTitle">Connection</h2>
+        <button type="button" class="btn-deck btn-deck--ghost" id="closeDetailBtn">Close</button>
+      </div>
+      <div class="field field--full">
+        <p class="m365-meta" id="detailMeta"></p>
+      </div>
+
+      <div class="field field--full m365-actions-row">
+        <button type="button" class="btn-deck btn-deck--ghost" id="testBtn">Test access</button>
+        <button type="button" class="btn-deck btn-deck--ghost" id="listCalendarsBtn">Choose calendar</button>
+        <button type="button" class="btn-deck btn-deck--ghost" id="clearCalendarBtn">Clear calendar</button>
+        <button type="button" class="btn-deck btn-deck--danger" id="disconnectBtn">Disconnect</button>
+      </div>
+      <p class="deck-error" id="detailError" hidden></p>
+      <p class="m365-banner m365-banner--ok" id="detailOk" hidden></p>
+
+      <div class="field field--full" id="calendarBlock" hidden>
+        <label>Writable calendars</label>
+        <ul class="m365-results" id="calendarResults"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/convex-config.js"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/auth-guard.js?v=4"></script>
+  <script src="js/google-studio.js?v=1"></script>
+</body>
+</html>
