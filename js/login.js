@@ -44,14 +44,54 @@
     emailEl.value = '';
     passwordEl.value = '';
     emailEl.autocomplete = 'off';
-    passwordEl.autocomplete = 'off';
+    passwordEl.autocomplete = 'new-password';
     emailEl.readOnly = true;
     passwordEl.readOnly = true;
+    emailEl.dataset.userEdited = '';
+    passwordEl.dataset.userEdited = '';
     const unlock = (el) => {
       el.readOnly = false;
     };
-    emailEl.addEventListener('focus', () => unlock(emailEl), { once: true });
-    passwordEl.addEventListener('focus', () => unlock(passwordEl), { once: true });
+    const bindUnlock = (el) => {
+      const once = () => unlock(el);
+      el.addEventListener('keydown', once, { once: true });
+      el.addEventListener('paste', once, { once: true });
+      el.addEventListener('mousedown', once, { once: true });
+    };
+    bindUnlock(emailEl);
+    bindUnlock(passwordEl);
+    const markEdited = (el) => {
+      el.dataset.userEdited = '1';
+    };
+    emailEl.addEventListener('input', () => markEdited(emailEl));
+    passwordEl.addEventListener('input', () => markEdited(passwordEl));
+  }
+
+  /** Browsers may inject saved credentials after paint; clear until the user types. */
+  function guardAgainstAutofill(ms) {
+    const until = Date.now() + ms;
+    const tick = () => {
+      if (Date.now() > until) return;
+      for (const el of [emailEl, passwordEl]) {
+        if (el.dataset.userEdited === '1') continue;
+        if (el.value) el.value = '';
+      }
+      window.setTimeout(tick, 100);
+    };
+    tick();
+  }
+
+  function rejectInjectedAutofill(el) {
+    if (el.dataset.userEdited === '1') return;
+    el.value = '';
+  }
+
+  function watchAutofillInjection() {
+    for (const el of [emailEl, passwordEl]) {
+      el.addEventListener('animationstart', (e) => {
+        if (e.animationName === 'authAutofillStart') rejectInjectedAutofill(el);
+      });
+    }
   }
 
   function setMode(nextMode) {
@@ -91,8 +131,13 @@
       toggleBtn.textContent = 'Need an account? Sign up';
       flowEl.value = 'signIn';
       prepareBlankCredentials();
+      guardAgainstAutofill(4000);
     }
   }
+
+  prepareBlankCredentials();
+  guardAgainstAutofill(4000);
+  watchAutofillInjection();
 
   toggleBtn.addEventListener('click', () => {
     if (mode === 'verify' || mode === 'signUp') setMode('signIn');
