@@ -40,6 +40,20 @@
     errorEl.hidden = !msg;
   }
 
+  function prepareBlankCredentials() {
+    emailEl.value = '';
+    passwordEl.value = '';
+    emailEl.autocomplete = 'off';
+    passwordEl.autocomplete = 'off';
+    emailEl.readOnly = true;
+    passwordEl.readOnly = true;
+    const unlock = (el) => {
+      el.readOnly = false;
+    };
+    emailEl.addEventListener('focus', () => unlock(emailEl), { once: true });
+    passwordEl.addEventListener('focus', () => unlock(passwordEl), { once: true });
+  }
+
   function setMode(nextMode) {
     mode = nextMode;
     showError('');
@@ -63,6 +77,9 @@
       toggleBtn.textContent = 'Already have an account? Sign in';
       flowEl.value = 'signUp';
       passwordEl.autocomplete = 'new-password';
+      emailEl.autocomplete = 'email';
+      emailEl.readOnly = false;
+      passwordEl.readOnly = false;
       emailEl.focus();
     } else {
       titleEl.textContent = 'Sign in';
@@ -73,7 +90,7 @@
       submitBtn.textContent = 'Sign in';
       toggleBtn.textContent = 'Need an account? Sign up';
       flowEl.value = 'signIn';
-      passwordEl.autocomplete = 'current-password';
+      prepareBlankCredentials();
     }
   }
 

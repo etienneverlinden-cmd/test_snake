@@ -33,17 +33,17 @@
 
       <div class="divider">or email</div>
 
-      <form id="authForm">
+      <form id="authForm" autocomplete="off">
         <input type="hidden" name="flow" id="flow" value="signIn">
 
         <div id="credBlock">
           <div class="field">
             <label for="email">Email address</label>
-            <input id="email" name="email" type="email" required autocomplete="email" placeholder="name@example.com" inputmode="email">
+            <input id="email" name="email" type="email" required autocomplete="off" placeholder="name@example.com" inputmode="email" spellcheck="false">
           </div>
           <div class="field">
             <label for="password">Password</label>
-            <input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters">
+            <input id="password" name="password" type="password" required minlength="8" autocomplete="off" placeholder="At least 8 characters">
           </div>
           <div class="field" id="nameBlock" hidden>
             <label for="name">Display name <span class="optional">(optional)</span></label>
@@ -68,6 +68,6 @@
 
   <script src="js/convex-config.js?v=2"></script>
   <script src="js/auth.js?v=2"></script>
-  <script src="js/login.js?v=2"></script>
+  <script src="js/login.js?v=3"></script>
 </body>
 </html>
