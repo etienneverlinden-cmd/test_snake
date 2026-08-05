@@ -81,6 +81,19 @@
     tick();
   }
 
+  function rejectInjectedAutofill(el) {
+    if (el.dataset.userEdited === '1') return;
+    el.value = '';
+  }
+
+  function watchAutofillInjection() {
+    for (const el of [emailEl, passwordEl]) {
+      el.addEventListener('animationstart', (e) => {
+        if (e.animationName === 'authAutofillStart') rejectInjectedAutofill(el);
+      });
+    }
+  }
+
   function setMode(nextMode) {
     mode = nextMode;
     showError('');
@@ -124,6 +137,7 @@
 
   prepareBlankCredentials();
   guardAgainstAutofill(4000);
+  watchAutofillInjection();
 
   toggleBtn.addEventListener('click', () => {
     if (mode === 'verify' || mode === 'signUp') setMode('signIn');
