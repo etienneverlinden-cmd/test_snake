@@ -2,8 +2,8 @@
   'use strict';
 
   const form = document.getElementById('authForm');
-  const emailEl = document.getElementById('email');
-  const passwordEl = document.getElementById('password');
+  const emailEl = document.getElementById('arcadeEmailInput');
+  const passwordEl = document.getElementById('arcadePasswordInput');
   const nameEl = document.getElementById('name');
   const codeEl = document.getElementById('code');
   const flowEl = document.getElementById('flow');
@@ -67,18 +67,31 @@
     passwordEl.addEventListener('input', () => markEdited(passwordEl));
   }
 
-  /** Browsers may inject saved credentials after paint; clear until the user types. */
-  function guardAgainstAutofill(ms) {
-    const until = Date.now() + ms;
-    const tick = () => {
-      if (Date.now() > until) return;
+  let autofillGuardTimer = null;
+
+  function stopAutofillGuard() {
+    if (autofillGuardTimer !== null) {
+      window.clearInterval(autofillGuardTimer);
+      autofillGuardTimer = null;
+    }
+  }
+
+  /** Firefox often injects saved logins after focus; keep fields blank until the user types. */
+  function guardAgainstAutofillUntilEdit() {
+    stopAutofillGuard();
+    autofillGuardTimer = window.setInterval(() => {
+      if (mode !== 'signIn') {
+        stopAutofillGuard();
+        return;
+      }
       for (const el of [emailEl, passwordEl]) {
-        if (el.dataset.userEdited === '1') continue;
+        if (el.dataset.userEdited === '1') {
+          stopAutofillGuard();
+          return;
+        }
         if (el.value) el.value = '';
       }
-      window.setTimeout(tick, 100);
-    };
-    tick();
+    }, 200);
   }
 
   function rejectInjectedAutofill(el) {
@@ -91,6 +104,8 @@
       el.addEventListener('animationstart', (e) => {
         if (e.animationName === 'authAutofillStart') rejectInjectedAutofill(el);
       });
+      // Firefox can commit autofill without the animation hook on some builds.
+      el.addEventListener('change', () => rejectInjectedAutofill(el));
     }
   }
 
@@ -98,6 +113,7 @@
     mode = nextMode;
     showError('');
     if (mode === 'verify') {
+      stopAutofillGuard();
       titleEl.textContent = 'Confirm your email';
       hintEl.textContent = `We sent a code to ${pendingEmail}. Enter it below to unlock the arcade.`;
       credBlock.hidden = true;
@@ -107,6 +123,7 @@
       toggleBtn.textContent = 'Back to sign in';
       flowEl.value = 'email-verification';
     } else if (mode === 'signUp') {
+      stopAutofillGuard();
       titleEl.textContent = 'Create account';
       hintEl.textContent =
         'Enter your email and password below. We’ll email you a code to confirm before you can play.';
@@ -131,12 +148,12 @@
       toggleBtn.textContent = 'Need an account? Sign up';
       flowEl.value = 'signIn';
       prepareBlankCredentials();
-      guardAgainstAutofill(4000);
+      guardAgainstAutofillUntilEdit();
     }
   }
 
   prepareBlankCredentials();
-  guardAgainstAutofill(4000);
+  guardAgainstAutofillUntilEdit();
   watchAutofillInjection();
 
   toggleBtn.addEventListener('click', () => {

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="auth.css?v=5">
+  <link rel="stylesheet" href="auth.css?v=6">
 </head>
 <body>
   <div class="bg" aria-hidden="true">
@@ -33,22 +33,23 @@
 
       <div class="divider">or email</div>
 
+      <!-- Separate decoy form: Firefox fills this instead of the real login form. -->
+      <form class="autofill-trap" aria-hidden="true" tabindex="-1" autocomplete="on">
+        <input type="text" name="username" autocomplete="username" tabindex="-1">
+        <input type="password" name="password" autocomplete="current-password" tabindex="-1">
+      </form>
+
       <form id="authForm" autocomplete="off" method="post" action="#">
         <input type="hidden" name="flow" id="flow" value="signIn">
-        <!-- Decoys absorb browser/password-manager autofill before real fields. -->
-        <div class="field autofill-trap" aria-hidden="true">
-          <input tabindex="-1" type="text" name="username" autocomplete="username">
-          <input tabindex="-1" type="password" name="password" autocomplete="current-password">
-        </div>
 
         <div id="credBlock">
           <div class="field">
-            <label for="email">Email address</label>
-            <input id="email" name="arcadeEmail" type="text" required autocomplete="off" placeholder="name@example.com" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" data-1p-ignore data-lpignore="true">
+            <label for="arcadeEmailInput">Email address</label>
+            <input id="arcadeEmailInput" name="arcadeEmail" type="text" required autocomplete="off" placeholder="name@example.com" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" data-1p-ignore data-lpignore="true">
           </div>
           <div class="field">
-            <label for="password">Password</label>
-            <input id="password" name="arcadePassword" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" data-1p-ignore data-lpignore="true">
+            <label for="arcadePasswordInput">Password</label>
+            <input id="arcadePasswordInput" name="arcadePassword" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" data-1p-ignore data-lpignore="true">
           </div>
           <div class="field" id="nameBlock" hidden>
             <label for="name">Display name <span class="optional">(optional)</span></label>
@@ -73,6 +74,6 @@
 
   <script src="js/convex-config.js?v=2"></script>
   <script src="js/auth.js?v=2"></script>
-  <script src="js/login.js?v=5"></script>
+  <script src="js/login.js?v=6"></script>
 </body>
 </html>
