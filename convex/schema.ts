@@ -73,5 +73,6 @@ export default defineSchema({
   })
     .index("by_created_by", ["createdByUserId"])
     .index("by_oauth_state", ["oauthState"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_tenant", ["tenantId"]),
 });

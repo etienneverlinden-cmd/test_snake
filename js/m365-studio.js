@@ -13,7 +13,6 @@
   const pageError = document.getElementById('pageError');
   const pageOk = document.getElementById('pageOk');
   const connectBtn = document.getElementById('connectBtn');
-  const customerLabel = document.getElementById('customerLabel');
   const emptyList = document.getElementById('emptyList');
   const connectionList = document.getElementById('connectionList');
   const detailPanel = document.getElementById('detailPanel');
@@ -75,6 +74,11 @@
     return status;
   }
 
+  function displayName(c) {
+    if (c.label && c.label !== 'Connecting…') return c.label;
+    return c.tenantName || c.accountName || c.accountEmail || 'Connection';
+  }
+
   function formatMeta(c) {
     const lines = [];
     lines.push(`Status: ${statusLabel(c.status)}`);
@@ -109,7 +113,7 @@
       btn.innerHTML =
         `<span><span class="m365-card-name"></span><span class="m365-card-sub"></span></span>` +
         `<span class="m365-status is-${c.status}"></span>`;
-      btn.querySelector('.m365-card-name').textContent = c.label;
+      btn.querySelector('.m365-card-name').textContent = displayName(c);
       const subParts = [];
       if (c.tenantName) subParts.push(c.tenantName);
       if (c.accountEmail) subParts.push(c.accountEmail);
@@ -128,7 +132,7 @@
     if (active) {
       active = connections.find((c) => c.id === active.id) || null;
       if (active) {
-        detailTitle.textContent = active.label;
+        detailTitle.textContent = displayName(active);
         detailMeta.textContent = formatMeta(active);
       } else {
         detailPanel.hidden = true;
@@ -217,16 +221,9 @@
 
   connectBtn.addEventListener('click', async () => {
     clearFlash();
-    const label = (customerLabel.value || '').trim();
-    if (label.length < 2) {
-      show(pageError, 'Enter a customer label first.');
-      return;
-    }
     connectBtn.disabled = true;
     try {
-      const result = await window.ArcadeAuth.callMutation('m365:startConnect', {
-        label,
-      });
+      const result = await window.ArcadeAuth.callMutation('m365:startConnect', {});
       if (!result?.authorizeUrl) throw new Error('No authorize URL returned');
       window.location.href = result.authorizeUrl;
     } catch (err) {
