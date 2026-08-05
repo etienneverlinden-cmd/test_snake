@@ -76,8 +76,11 @@
   function connectionSub(c) {
     const parts = [];
     if (c.tenantName) parts.push(c.tenantName);
-    if (c.itemName) parts.push(c.itemName);
-    else if (c.siteName) parts.push(c.siteName);
+    if (c.hasLocation) {
+      parts.push(c.itemName || c.siteName || 'folder saved');
+    } else {
+      parts.push('connected — opens OneDrive root');
+    }
     if (c.locationKind) parts.push(c.locationKind);
     return parts.join(' · ');
   }
@@ -112,7 +115,7 @@
     if (list.length === 0) {
       const li = document.createElement('li');
       li.innerHTML =
-        '<button type="button" disabled>No connected customers with a folder set. Use M365 Connect first.</button>';
+        '<button type="button" disabled>No connected customers match your search.</button>';
       customerMenu.appendChild(li);
       customerMenu.hidden = false;
       return;
@@ -125,8 +128,8 @@
         `<span></span><span class="od-menu-sub"></span>`;
       btn.querySelector('span').textContent = c.label;
       btn.querySelector('.od-menu-sub').textContent = connectionSub(c) || 'Connected';
-      btn.addEventListener('click', () => {
-        selectCustomer(c);
+      btn.addEventListener('click', async () => {
+        await selectCustomer(c);
         menuOpen = false;
         renderMenu();
       });
@@ -299,37 +302,60 @@
     loadFolder();
   }
 
-  function selectCustomer(c) {
+  async function selectCustomer(c) {
     selected = c;
     customerSearch.value = c.label;
-    selectedLabel.textContent = `${c.label}${c.tenantName ? ` · ${c.tenantName}` : ''} — ${c.itemName || c.siteName || 'folder'}`;
+    showError('');
     browser.hidden = false;
-    stack = [{ id: c.itemId, name: c.itemName || 'Root' }];
-    loadFolder();
+    fileBody.innerHTML =
+      '<tr><td colspan="4" class="od-empty">Loading…</td></tr>';
+
+    let driveId = c.driveId;
+    let itemId = c.itemId;
+    let itemName = c.itemName || 'Root';
+
+    if (!driveId || !itemId) {
+      try {
+        const root = await window.ArcadeAuth.callAction(
+          'm365:getMyDriveRoot',
+          { connectionId: c.id },
+          true,
+        );
+        driveId = root.driveId;
+        itemId = root.itemId;
+        itemName = root.itemName || root.driveName || 'OneDrive';
+        selectedLabel.textContent = `${c.label}${c.tenantName ? ` · ${c.tenantName}` : ''} — ${itemName} (OneDrive root)`;
+      } catch (err) {
+        browser.hidden = true;
+        showError(
+          `${c.label} is connected but browsing failed. In M365 Connect, open this customer → Pick SharePoint site or Use their OneDrive → Use this folder. (${err.message || err})`,
+        );
+        selectedLabel.textContent = `${c.label} — connected, folder not set`;
+        return;
+      }
+    } else {
+      selectedLabel.textContent = `${c.label}${c.tenantName ? ` · ${c.tenantName}` : ''} — ${itemName}`;
+    }
+
+    selected = { ...c, driveId, itemId, itemName };
+    stack = [{ id: itemId, name: itemName }];
+    await loadFolder();
   }
 
   async function refreshConnections() {
-    // Prefer dedicated query if deployed; fall back to listConnections for older duck builds.
-    let rows = null;
-    try {
-      rows = await window.ArcadeAuth.callQuery(
-        'm365:listBrowsableConnections',
-        {},
-      );
-    } catch {
-      rows = null;
-    }
-    if (!Array.isArray(rows)) {
-      const all =
-        (await window.ArcadeAuth.callQuery('m365:listConnections', {})) || [];
-      rows = all.filter(
-        (c) => c && c.status === 'connected' && c.hasLocation && c.driveId && c.itemId,
-      );
-    }
-    connections = rows;
+    const all =
+      (await window.ArcadeAuth.callQuery('m365:listConnections', {})) || [];
+    connections = all.filter((c) => c && c.status === 'connected');
     if (!connections.length) {
       selectedLabel.textContent =
-        'No customers ready yet. Connect one in M365 Connect and pick a folder.';
+        'No connected customers yet. Connect one in M365 Connect first.';
+      return;
+    }
+    const withFolder = connections.filter((c) => c.hasLocation).length;
+    if (withFolder === 0) {
+      selectedLabel.textContent = `${connections.length} connected — select one below (opens OneDrive root until you save a folder in M365 Connect).`;
+    } else {
+      selectedLabel.textContent = 'Select a customer to browse their files.';
     }
   }
 
@@ -363,6 +389,6 @@
 
   await refreshConnections();
   if (connections.length === 1) {
-    selectCustomer(connections[0]);
+    await selectCustomer(connections[0]);
   }
 })();
