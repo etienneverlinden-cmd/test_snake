@@ -20,3 +20,6 @@ node_modules/
 
 # Convex local
 .convex/
+
+# Cloudflare Pages build output
+dist/

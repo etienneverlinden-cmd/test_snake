@@ -1,0 +1,4 @@
+# Cloudflare Pages — static publish of pragmatict.be
+name = "pragmatict"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "dist"

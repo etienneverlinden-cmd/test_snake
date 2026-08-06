@@ -7,7 +7,9 @@
     "dev:convex": "convex dev",
     "deploy:convex": "convex dev --once",
     "dev:site": "python -m http.server 8080",
-    "auth:keys": "node scripts/set-auth-keys.mjs"
+    "auth:keys": "node scripts/set-auth-keys.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
+    "deploy:pages": "npm run build:pages && wrangler pages deploy dist --project-name=pragmatict"
   },
   "dependencies": {
     "@auth/core": "0.41.1",
