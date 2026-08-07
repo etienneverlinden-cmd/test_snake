@@ -7,7 +7,9 @@
     "dev:convex": "convex dev",
     "deploy:convex": "convex dev --once",
     "dev:site": "python -m http.server 8080",
-    "auth:keys": "node scripts/set-auth-keys.mjs"
+    "auth:keys": "node scripts/set-auth-keys.mjs",
+    "build:loic-pages": "node scripts/build-loic-pages.mjs",
+    "deploy:loic-pages": "npm run build:loic-pages && wrangler pages deploy dist --project-name=loic-kine --config wrangler.loic.toml"
   },
   "dependencies": {
     "@auth/core": "0.41.1",

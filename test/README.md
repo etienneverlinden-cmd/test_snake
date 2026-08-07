@@ -16,7 +16,11 @@ Projet Convex dédié : **loic-verlinden** / déploiement `wary-rabbit-413`
 window.LOIC_CONVEX_URL = "https://wary-rabbit-413.convex.cloud";
 ```
 
-Puis ouvrez `http://localhost:8080/test/` (depuis la racine du repo).
+Puis ouvrez https://loic-kine.be/ (et en transition https://pragmatict.be/test/).
+
+## Cloudflare Pages
+
+Voir [docs/loic-kine-pages/README.md](../docs/loic-kine-pages/README.md).
 
 ## Pages
 
